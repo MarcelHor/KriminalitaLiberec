@@ -1,56 +1,35 @@
-import {MapContainer, Marker, Popup, TileLayer} from 'react-leaflet'
-import { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
+import axios from "axios";
+import MapMain from "./components/MapMain.jsx";
+import Header from "./components/Header.jsx";
 
-function App() {
+export default function App() {
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:3000/locations')
-            .then(response => response.json())
-            .then(data => {
-                setLocations(data);
-                console.log(data)
+       axios.get("http://localhost:3000/locations")
+           .then(res => {
+                setLocations(res.data);
                 setLoading(false);
-            });
+           })
+           .catch(err => {
+                  console.log(err);
+           })
     }, []);
 
     return (
-        <div className="App">
-            <h1 className={"p-4 text-3xl text-center"}>Kriminalita České Republiky</h1>
-
-            <div className={"p-4 mx-4"}>
+        <div className="flex flex-col h-screen font-sans">
+            <Header />
+            <div className="flex-1">
                 {loading ? (
-                    <div>Loading...</div>
+                    <div className="flex items-center justify-center h-full">
+                        <div className="animate-spin rounded-full h-64 w-64 border-b-2 border-gray-900"></div>
+                    </div>
                 ) : (
-                    <MapContainer
-                        bounds={[[48.55, 12.09], [51.05, 18.86]]}
-                        maxBounds={[[48.55, 12.09], [51.05, 18.86]]}
-                        minZoom={7}
-                        maxZoom={18}
-                        scrollWheelZoom={true}
-                        className={"h-screen-4/5 w-full z-0"}>
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-
-                        {locations.map((location, index) => (
-                            <Marker key={index} position={[location.coordinates[1], location.coordinates[0]]}>
-                                <Popup>
-                                    <div className={"text-center"}>
-                                        <h1 className={"text-xl"}>{location.description }</h1>
-                                    </div>
-                                </Popup>
-                            </Marker>
-                        ))}
-
-
-                    </MapContainer>
+                    <MapMain locations={locations} />
                 )}
             </div>
-
         </div>
-    )
+    );
 }
-export default App

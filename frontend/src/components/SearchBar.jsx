@@ -1,28 +1,36 @@
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import {useMap} from "react-leaflet";
+import {OpenStreetMapProvider, SearchControl} from "leaflet-geosearch";
+import {useEffect} from "react";
+import "leaflet-geosearch/dist/geosearch.css";
 
-const GeoJSONSearch = ({ onResultSelected }) => {
-  const provider = new OpenStreetMapProvider();
-
-  const handleResultSelected = (event) => {
-    onResultSelected(event.result);
-  };
-
-  return (
-    <GeoSearchControl
-      provider={provider}
-      showMarker={false}
-      showPopup={false}
-      maxMarkers={1}
-      retainZoomLevel={false}
-      animateZoom={true}
-      autoClose={false}
-      searchLabel="Hledat umístění"
-      keepResult={true}
-      popupFormat={({ query, result }) => result.label}
-      resultFormat={({ result }) => result.label}
-      onSelect={handleResultSelected}
-    />
-  );
-};
-
-export default GeoJSONSearch;
+function SearchBar(){
+    const map = useMap();
+    const provider = new OpenStreetMapProvider(
+        {
+            params: {
+                countrycodes: 'cz',
+                bounded: 1,
+                addressdetails: 1,
+                limit: 5,
+                viewbox: '14.9393,50.6275,15.2138,50.8866',
+                format: 'json',
+            }
+        }
+    );
+    const searchControl = new SearchControl({
+        provider: provider,
+        style: 'button',
+        position: 'topright',
+        retainZoomLevel: false,
+        animateZoom: true,
+        keepResult: true,
+        autoClose: true,
+        searchLabel: 'Zadejte adresu',
+    });
+    useEffect(() => {
+        map.addControl(searchControl);
+        return () => map.removeControl(searchControl);
+    }, []);
+    return;
+}
+export default SearchBar;

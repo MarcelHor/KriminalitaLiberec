@@ -20,6 +20,12 @@ router.post('/', (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.delete('/', (req, res) => {
+    Location.deleteMany()
+        .then(() => res.json('Locations deleted!'))
+        .catch(err => res.status(400).json('Error: ' + err));
+
+});
 
 
 module.exports = router;

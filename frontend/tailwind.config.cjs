@@ -8,8 +8,10 @@ module.exports = {
     extend: {
       height: {
         "screen-4/5": "80vh",
+      },
+      colors: {
+         "header": "#212026",
       }
-
     },
   },
   plugins: [],

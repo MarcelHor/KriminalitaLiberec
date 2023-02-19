@@ -10,8 +10,23 @@ const LocationSchema = new schema({
         type: [Number],
         index: '2dsphere'
     },
-    description: {
-        type: String
+    properties: {
+        name: {
+            type: String,
+            required: true
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        },
+        description: {
+            type: String,
+            required: true
+        },
+        resolvedOptions: {
+            type: String,
+            required: true
+        },
     }
 });
 
