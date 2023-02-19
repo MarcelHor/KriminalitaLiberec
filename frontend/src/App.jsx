@@ -12,6 +12,7 @@ export default function App() {
            .then(res => {
                 setLocations(res.data);
                 setLoading(false);
+                console.log(res.data);
            })
            .catch(err => {
                   console.log(err);
