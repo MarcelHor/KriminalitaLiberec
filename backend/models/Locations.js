@@ -11,25 +11,16 @@ const LocationSchema = new schema({
         index: '2dsphere'
     },
     properties: {
-        name: {
-            type: String,
-            required: true
-        },
         date: {
             type: Date,
             default: Date.now
         },
-        description: {
+        crime: {
             type: String,
-            required: true
-        },
-        resolvedOptions: {
-            type: String,
-            required: true
-        },
+            ref: 'CrimeType'
+        }
     }
 });
-
 
 const Location = mongoose.model('Locations', LocationSchema);
 module.exports = Location;
