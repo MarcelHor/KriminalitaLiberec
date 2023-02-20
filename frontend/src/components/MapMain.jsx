@@ -6,6 +6,18 @@ import RightSidebar from "./RightSidebar.jsx";
 
 
 export default function MapMain(props) {
+
+    const count = props.locations.reduce((counts, crime) => {
+        const crimeName = crime.properties.crime.name;
+        counts[crimeName] = (counts[crimeName] || 0) + 1;
+        return counts;
+    }, {});
+
+// Convert counts object to array of crime:count pairs
+    const crimeCountArray = Object.entries(count).map(([crime, count]) => ({crime, count}));
+
+    console.log(crimeCountArray);
+
     return (
         <div className={"flex h-full w-full"}>
                 <LeftSidebar/>
@@ -21,8 +33,8 @@ export default function MapMain(props) {
                     className={"h-full w-full z-0"}>
 
                     <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+                        attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org">OpenMapTiles</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+                        url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
                         style={"outline: 1px solid transparent"}
                     />
 
@@ -43,7 +55,7 @@ export default function MapMain(props) {
                     </MarkerClusterGroup>
                 </MapContainer>
 
-                <RightSidebar/>
+                <RightSidebar count={count} />
             </div>
     );
 }
