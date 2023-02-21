@@ -1,8 +1,9 @@
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
+import { MapContainer, TileLayer } from "react-leaflet";
 import SearchBar from "./SearchBar.jsx";
 import LeftSidebar from "./LeftSidebar.jsx";
 import RightSidebar from "./RightSidebar.jsx";
+import MapContent from "./MapContent.jsx";
+import {useState} from "react";
 
 
 export default function MapMain(props) {
@@ -13,14 +14,11 @@ export default function MapMain(props) {
         return counts;
     }, {});
 
-// Convert counts object to array of crime:count pairs
-    const crimeCountArray = Object.entries(count).map(([crime, count]) => ({crime, count}));
-
-    console.log(crimeCountArray);
+    const [visibleMarkers, setVisibleMarkers] = useState([]);
 
     return (
         <div className={"flex h-full w-full"}>
-                <LeftSidebar/>
+                <LeftSidebar />
                 <MapContainer
                     bounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
                     maxBounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
@@ -39,22 +37,8 @@ export default function MapMain(props) {
                     />
 
                     <SearchBar/>
-
-                    <MarkerClusterGroup>
-                    {props.locations.map((location, index) => (
-                            console.log(location.coordinates[1], location.coordinates[0]),
-                            <Marker key={index} position={[location.coordinates[0], location.coordinates[1]]}>
-                                <Popup>
-                                    <div className={"text-center"}>
-                                        <h1 className={"text-xl"}>{location.properties.crime.name}</h1>
-                                        <p className={"text-sm"}>{location.properties.crime.description}</p>
-                                    </div>
-                                </Popup>
-                            </Marker>
-                    ))}
-                    </MarkerClusterGroup>
+                    <MapContent locations={props.locations}/>
                 </MapContainer>
-
                 <RightSidebar count={count} />
             </div>
     );

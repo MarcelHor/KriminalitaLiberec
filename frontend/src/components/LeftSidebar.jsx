@@ -3,7 +3,7 @@ import select_multiple from "../assets/select_multiple.svg";
 import select_line from "../assets/select_line.svg";
 
 
-export default function LeftSidebar() {
+export default function LeftSidebar(props) {
     return (
         <div className="p-4 w-1/4 h-full grid grid-cols-1">
             <div>
