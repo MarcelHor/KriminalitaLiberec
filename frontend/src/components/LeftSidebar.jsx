@@ -4,6 +4,19 @@ import select_line from "../assets/select_line.svg";
 
 
 export default function LeftSidebar(props) {
+    const handleCheckboxChange = (event) => {
+        const {name, checked} = event.target;
+        if (checked) {
+            const newMarkers = props.locations.filter(marker => marker.properties.crime.name === name);
+            props.setVisibleMarkers(prevState => [...prevState, ...newMarkers]);
+        } else {
+            const newMarkers = props.visibleMarkers.filter(marker => marker.properties.crime.name !== name);
+            props.setVisibleMarkers(newMarkers);
+        }
+    }
+
+    const uniqueNames = [...new Set(props.locations.map(marker => marker.properties.crime.name))];
+
     return (
         <div className="p-4 w-1/4 h-full grid grid-cols-1">
             <div>
@@ -26,16 +39,15 @@ export default function LeftSidebar(props) {
 
             <div>
                 <h1 className={"text-xl"}>Vrstvy</h1>
-                <div className=" pt-4 w-full rounded-l">
-                    <div className="flex items-center mb-4">
-                        <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label className="ml-2 text-sm font-medium">Přestupeky</label>
+                {uniqueNames.map((name, index) => (
+                    <div className={"pt-4"} key={index}>
+                        <div className=" w-full flex items-center rounded-l space-x-2">
+                            <input type="checkbox" defaultChecked={true} name={name} onChange={handleCheckboxChange} className="inline-block w-8"/>
+                            <span>{name}</span>
+                        </div>
                     </div>
-                    <div className="flex items-center mb-4">
-                        <input id="default-checkbox" type="checkbox" value="" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                        <label className="ml-2 text-sm font-medium">Vraždy</label>
-                    </div>
-                </div>
+                ))}
+
             </div>
         </div>
     )

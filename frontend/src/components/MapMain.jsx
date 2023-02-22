@@ -7,18 +7,18 @@ import {useState} from "react";
 
 
 export default function MapMain(props) {
+    const [visibleMarkers, setVisibleMarkers] = useState(props.locations);
 
-    const count = props.locations.reduce((counts, crime) => {
+    const count = visibleMarkers.reduce((counts, crime) => {
         const crimeName = crime.properties.crime.name;
         counts[crimeName] = (counts[crimeName] || 0) + 1;
         return counts;
     }, {});
 
-    const [visibleMarkers, setVisibleMarkers] = useState([]);
 
     return (
         <div className={"flex h-full w-full"}>
-                <LeftSidebar />
+                <LeftSidebar locations={props.locations} visibleMarkers={visibleMarkers} setVisibleMarkers={setVisibleMarkers}/>
                 <MapContainer
                     bounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
                     maxBounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
@@ -37,7 +37,7 @@ export default function MapMain(props) {
                     />
 
                     <SearchBar/>
-                    <MapContent locations={props.locations}/>
+                    <MapContent visibleMarkers={visibleMarkers}/>
                 </MapContainer>
                 <RightSidebar count={count} />
             </div>
