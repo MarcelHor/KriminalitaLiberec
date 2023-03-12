@@ -34,6 +34,7 @@ export default function RightSidebar(props) {
 
     return (
         <div className={"w-1/4 h-full p-2 "}>
+            <h1 className={"text-xl"}>Graf</h1>
             <Pie data={config} />
         </div>
 

@@ -3,18 +3,23 @@ import SearchBar from "./SearchBar.jsx";
 import LeftSidebar from "./LeftSidebar.jsx";
 import RightSidebar from "./RightSidebar.jsx";
 import MapContent from "./MapContent.jsx";
-import {useState} from "react";
-
+import {useEffect, useState} from "react";
 
 export default function MapMain(props) {
+    // State for the visible markers on the map (used for filtering)
     const [visibleMarkers, setVisibleMarkers] = useState(props.locations);
+    // State for the number of markers in each category (used for the sidebar)
+    const [count, setCount] = useState({});
 
-    const count = visibleMarkers.reduce((counts, crime) => {
-        const crimeName = crime.properties.crime.name;
-        counts[crimeName] = (counts[crimeName] || 0) + 1;
-        return counts;
-    }, {});
-
+    // Count the number of markers in each category and update the state when the visible markers change
+    useEffect(() => {
+        const count = visibleMarkers.reduce((counts, crime) => {
+            const crimeName = crime.properties.crime.name;
+            counts[crimeName] = (counts[crimeName] || 0) + 1;
+            return counts;
+        }, {});
+        setCount(count);
+    }, [visibleMarkers]);
 
     return (
         <div className={"flex h-full w-full"}>
@@ -29,6 +34,7 @@ export default function MapMain(props) {
                     center={[50.7572, 15.0560]}
                     scrollWheelZoom={true}
                     className={"h-full w-full z-0"}>
+
 
                     <TileLayer
                         attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org">OpenMapTiles</a>, &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'

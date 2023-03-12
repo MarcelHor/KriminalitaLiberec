@@ -1,8 +1,10 @@
-import React from 'react';
-import { Marker, Popup, useMap  } from 'react-leaflet';
+import React, {useState} from 'react';
+import {Marker, Popup, useMap} from 'react-leaflet';
 import MarkerClusterGroup from "react-leaflet-cluster";
+import right_arrow from '../assets/right_arrow.svg';
 
-export default function MapContent(props){
+export default function MapContent(props) {
+    const map = useMap();
     const locations = props.visibleMarkers;
 
     //create icon for cluster
@@ -15,32 +17,36 @@ export default function MapContent(props){
             const category = marker.replace(/\s+/g, '');
             categories[category] = categories[category] ? categories[category] + 1 : 1;
         });
+
         // Define the colors for each category
         const categoryColors = {
-            Obecněnebezpečná: '#ff3333',
-            Požáry: '#ff9933',
-            Extremismus: '#ffff33',
-            výbuchy: '#33ff33',
-            Dopravnínehody: '#3388ff',
-            KrádežePodvody: '#9933ff',
-            Zbraně: '#ff33ff',
-            Jinámajetková: '#ff3333',
-            Toxikománie: '#ff9933',
+            'Obecněnebezpečná': '#ff3333',
+            'Požáry': '#ff9933',
+            'Extremismus': '#ffff33',
+            'výbuchy': '#33ff33',
+            'Dopravnínehody': '#3388ff',
+            'KrádežePodvody': '#9933ff',
+            'Zbraně': '#ff33ff',
+            'Jinámajetková': '#ff3888',
+            'Toxikománie': '#ff9933',
         };
 
         // Define the radius and line width for the ring chart
         const radius = 25;
-        const lineWidth = 10;
+        const lineWidth = 5;
 
         // Create the canvas element and context
         const canvas = document.createElement('canvas');
-        canvas.width = radius * 2;
-        canvas.height = radius * 2;
-        const ctx = canvas.getContext('2d');
 
+        const ctx = canvas.getContext('2d');
         // Calculate total number of markers and total width of the ring chart
         const markerCount = childMarkers.length;
-        const totalWidth = lineWidth * markerCount;
+
+        // Draw the ring chart background
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.beginPath();
+        ctx.arc(radius, radius, radius, 0, 2 * Math.PI);
+        ctx.fill();
 
         // Draw the ring chart
         let startAngle = -Math.PI / 2;
@@ -59,7 +65,7 @@ export default function MapContent(props){
         iconDiv.style.position = 'relative';
         iconDiv.style.width = `${radius * 2}px`;
         iconDiv.style.height = `${radius * 2}px`;
-        iconDiv.innerHTML = `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-65%, -45%); font-size: 15px; font-weight: bold;">${markerCount}</div><canvas></canvas>`;
+        iconDiv.innerHTML = `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-65%, -45%); font-size: 15px; font-weight: bold;">${markerCount}</div><canvas width=${radius * 2} height=${radius * 2}>`;
         iconDiv.querySelector('canvas').getContext('2d').drawImage(canvas, 0, 0);
 
         // Set the canvas as the icon's HTML
@@ -82,31 +88,83 @@ export default function MapContent(props){
         iconDiv.style.boxShadow = '0px 0px 6px rgba(0, 0, 0, 0.5)';
         iconDiv.innerHTML = `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: bold; color: white;">1</div>`;
         const icon = L.divIcon({
-            html: iconDiv,
-            className: 'marker-custom',
-            iconSize: L.point(30, 30),
-            iconAnchor: L.point(15, 15),
+            html: iconDiv, className: 'marker-custom', iconSize: L.point(30, 30), iconAnchor: L.point(15, 15),
         });
         return icon;
     };
 
 
-    return (
-        <>
-            <MarkerClusterGroup showCoverageOnHover={false}
-                                iconCreateFunction={createClusterCustomIcon}
-            >
-                {locations.map((location, index) => (
-                        <Marker key={index} position={[location.coordinates[1], location.coordinates[0]]} icon={createMarkerCustomIcon('#ff3333')}>
-                            <Popup>
-                                <div>
-                                    <h1>{location.properties.crime.name}</h1>
-                                    <p>{location.properties.crime.description}</p>
-                                </div>
-                            </Popup>
-                        </Marker>
-             ))}
-            </MarkerClusterGroup>
-        </>
-    );
+    const handleClusterClick = (cluster) => {
+        const markers = cluster.layer.getAllChildMarkers();
+
+        // Create container div
+        const container = document.createElement('div');
+
+        // Add popup content to container div
+        const content = getMarkerPopupContent(markers[0], markers);
+        const popupContent = document.createElement('div');
+        popupContent.innerHTML = content;
+        container.appendChild(popupContent);
+
+        // Add buttons to container div
+        const prevButton = document.createElement('button');
+        prevButton.textContent = 'Previous';
+        prevButton.style.marginRight = '5px'; // add some spacing between buttons
+        prevButton.addEventListener('click', () => cycleMarkers(-1));
+        container.appendChild(prevButton);
+
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'Next';
+        nextButton.addEventListener('click', () => cycleMarkers(1));
+        container.appendChild(nextButton);
+
+        // Create popup with container div as content
+        const popup = L.popup()
+            .setLatLng(cluster.latlng)
+            .setContent(container)
+            .openOn(map);
+
+        let currentMarkerIndex = 0;
+        const cycleMarkers = (increment) => {
+            currentMarkerIndex += increment;
+            if (currentMarkerIndex < 0) {
+                currentMarkerIndex = markers.length - 1;
+            } else if (currentMarkerIndex >= markers.length) {
+                currentMarkerIndex = 0;
+            }
+            popupContent.innerHTML = getMarkerPopupContent(markers[currentMarkerIndex], markers);
+        };
+    };
+
+    const getMarkerPopupContent = (marker, allMarkers) => {
+        return `
+        <div>
+            <p>${marker.options.children.props.children.props.children[0].props.children}</p>
+            <p>${allMarkers.length} markers in this cluster</p>     
+        </div>
+    `;
+    };
+
+    return (<>
+        <MarkerClusterGroup showCoverageOnHover={false}
+                            iconCreateFunction={createClusterCustomIcon}
+                            maxClusterRadius={150}
+                            zoomToBoundsOnClick={false}
+                            onClick={(cluster) => {
+                                handleClusterClick(cluster)
+                            }}
+        >
+            {locations.map((location, index) => (
+                <Marker key={index} position={[location.coordinates[1], location.coordinates[0]]}
+                        icon={createMarkerCustomIcon('#ff3333')}>
+                    <Popup>
+                        <div>
+                            <h1>{location.properties.crime.name}</h1>
+                            <p>{location.properties.crime.description}</p>
+                        </div>
+                    </Popup>
+                </Marker>))}
+        </MarkerClusterGroup>
+
+    </>);
 }

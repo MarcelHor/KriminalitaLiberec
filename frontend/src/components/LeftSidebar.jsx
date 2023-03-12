@@ -4,6 +4,11 @@ import select_line from "../assets/select_line.svg";
 
 
 export default function LeftSidebar(props) {
+
+    // Handle checkbox change
+    // If checked, add markers to visibleMarkers
+    // If unchecked, remove markers from visibleMarkers
+    // This is done by filtering visibleMarkers
     const handleCheckboxChange = (event) => {
         const {name, checked} = event.target;
         if (checked) {
@@ -15,6 +20,8 @@ export default function LeftSidebar(props) {
         }
     }
 
+    // Set removes duplicates to get unique names
+    // Spread operator converts set to array to be able to map over it
     const uniqueNames = [...new Set(props.locations.map(marker => marker.properties.crime.name))];
 
     return (
