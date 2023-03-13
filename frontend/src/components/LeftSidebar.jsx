@@ -1,10 +1,18 @@
 import select_arrow from "../assets/select_arrow.svg";
 import select_multiple from "../assets/select_multiple.svg";
 import select_line from "../assets/select_line.svg";
-import markerClusterOptions from "@changey/react-leaflet-markercluster/.storybook/examples/marker-cluster-options.js";
+import {useState} from "react";
 
 
 export default function LeftSidebar(props) {
+    const [selectionMode, setSelectionMode] = useState('single');
+
+    const handleSelectionModeChange = (mode) => {
+        setSelectionMode(mode);
+    }
+
+
+
 
     // Handle checkbox change
     // If checked, add markers to visibleMarkers
@@ -20,7 +28,6 @@ export default function LeftSidebar(props) {
             props.setVisibleMarkers(newMarkers);
         }
     }
-
     // Set removes duplicates to get unique names
     // Spread operator converts set to array to be able to map over it
     const uniqueNames = [...new Set(props.locations.map(marker => marker.properties.crime.name))];
@@ -30,18 +37,18 @@ export default function LeftSidebar(props) {
             <div>
                 <h1 className={"text-xl"}>Nástroje</h1>
                 <div className={"pt-4"}>
-                    <div className=" w-full flex items-center rounded-l space-x-2 mb-4">
+                    <button className=" w-full flex items-center rounded-l space-x-2 mb-4" onClick={() => handleSelectionModeChange("single")}>
                         <img src={select_arrow} alt="select_arrow" className="inline-block w-8"/>
                         <span>Vybrat</span>
-                    </div>
-                    <div className=" w-full flex items-center  rounded-l space-x-2 mb-4">
+                    </button>
+                    <button className=" w-full flex items-center  rounded-l space-x-2 mb-4" onClick={() => handleSelectionModeChange("multiple")}>
                         <img src={select_multiple} alt="select_multiple" className="inline-block w-8"/>
                         <span>Vybrat více</span>
-                    </div>
-                    <div className=" w-full flex items-center  rounded-l space-x-2 mb-4">
+                    </button>
+                    <button className=" w-full flex items-center  rounded-l space-x-2 mb-4" onClick={() => handleSelectionModeChange("polygon")}>
                         <img src={select_line} alt="select_line" className="inline-block w-7"/>
-                        <span>Vybrat malbou</span>
-                    </div>
+                        <span>Vlastní výběr</span>
+                    </button>
                 </div>
             </div>
 

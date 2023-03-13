@@ -14,6 +14,7 @@ function SearchBar(){
                 limit: 5,
                 viewbox: '14.9393,50.6275,15.2138,50.8866',
                 format: 'json',
+
             }
         }
     );
