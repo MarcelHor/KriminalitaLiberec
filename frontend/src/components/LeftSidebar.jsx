@@ -1,6 +1,7 @@
 import select_arrow from "../assets/select_arrow.svg";
 import select_multiple from "../assets/select_multiple.svg";
 import select_line from "../assets/select_line.svg";
+import markerClusterOptions from "@changey/react-leaflet-markercluster/.storybook/examples/marker-cluster-options.js";
 
 
 export default function LeftSidebar(props) {

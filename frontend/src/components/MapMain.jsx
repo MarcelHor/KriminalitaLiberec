@@ -33,7 +33,8 @@ export default function MapMain(props) {
                     zoomControl={true}
                     center={[50.7572, 15.0560]}
                     scrollWheelZoom={true}
-                    className={"h-full w-full z-0"}>
+                    className={"h-full w-full z-0"}
+                >
 
 
                     <TileLayer

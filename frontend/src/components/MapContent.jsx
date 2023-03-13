@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Marker, Popup, useMap} from 'react-leaflet';
 import MarkerClusterGroup from "react-leaflet-cluster";
-import right_arrow from '../assets/right_arrow.svg';
 
 export default function MapContent(props) {
     const map = useMap();
     const locations = props.visibleMarkers;
+    const markerClusterGroupRef = useRef();
+
 
     //create icon for cluster
     const createClusterCustomIcon = function (cluster) {
@@ -145,11 +146,31 @@ export default function MapContent(props) {
     `;
     };
 
+    // useEffect(() => {
+    //     const markerLayers = locations.map(location => {
+    //         const marker = L.marker([location.coordinates[1], location.coordinates[0]], {
+    //             icon: createMarkerCustomIcon('#ff3333')
+    //         });
+    //
+    //         marker.bindPopup(`
+    //               <div>
+    //                 <h1>${location.properties.crime.name}</h1>
+    //                 <p>${location.properties.crime.description}</p>
+    //               </div>
+    // `       );
+    //         return marker;
+    //     });
+    //
+    //     markerClusterGroupRef.current.clearLayers();
+    //     markerClusterGroupRef.current.addLayers(markerLayers);
+    // }, [locations]);
+
     return (<>
         <MarkerClusterGroup showCoverageOnHover={false}
                             iconCreateFunction={createClusterCustomIcon}
                             maxClusterRadius={150}
                             zoomToBoundsOnClick={false}
+                            ref={markerClusterGroupRef}
                             onClick={(cluster) => {
                                 handleClusterClick(cluster)
                             }}
