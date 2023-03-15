@@ -1,8 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useMap} from 'react-leaflet';
-import {createClusterCustomIcon, createMarkerCustomIcon} from "../js/MapIcons.js";
+import {createClusterCustomIcon} from "../js/MapIcons.js";
 import {handleClusterClick} from "../js/ClusterClick.js";
-import MarkerClusterGroup    from "react-leaflet-cluster";
+import markerClusterGroup from "react-leaflet-cluster";
+
 // This component is used to add the markers to the map and handle input from the user
 export default function MapContent(props) {
     const map = useMap();
@@ -12,7 +13,7 @@ export default function MapContent(props) {
     const markerClusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
         iconCreateFunction: createClusterCustomIcon,
-        maxClusterRadius: 150,
+        maxClusterRadius: 200,
         zoomToBoundsOnClick: false,
         singleMarkerMode: true,
     });
@@ -31,10 +32,7 @@ export default function MapContent(props) {
         markerClusterGroup.clearLayers();
 
         const markerLayers = locations.map(location => {
-            const marker = L.marker([location.coordinates[1], location.coordinates[0]], {
-                icon: createMarkerCustomIcon('#ff3333')
-            });
-
+            const marker = L.marker([location.coordinates[1], location.coordinates[0]]);
             marker.bindPopup(`
       <div>
         <h1>${location.properties.crime.name}</h1>
@@ -53,4 +51,6 @@ export default function MapContent(props) {
             markerClusterGroup.clearLayers();
         };
     }, [locations, map, markerClusterGroup]);
+
+    return null;
 }
