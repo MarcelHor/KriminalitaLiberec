@@ -1,18 +1,22 @@
-import {FeatureGroup, MapContainer, TileLayer} from "react-leaflet";
+import {MapContainer, TileLayer} from "react-leaflet";
 import SearchBar from "./SearchBar.jsx";
 import LeftSidebar from "./LeftSidebar.jsx";
 import RightSidebar from "./RightSidebar.jsx";
 import MapContent from "./MapContent.jsx";
 import {useEffect, useRef, useState} from "react";
-import {EditControl} from "react-leaflet-draw";
-import { booleanContains } from '@turf/turf';
-
+import 'leaflet/dist/leaflet.css';
+import MapDraw from "./MapDraw.jsx";
 export default function MapMain(props) {
     // State for the visible markers on the map (used for filtering)
     const [visibleMarkers, setVisibleMarkers] = useState(props.locations);
     // State for the number of markers in each category (used for the sidebar)
     const [count, setCount] = useState({});
     const mapRef = useRef();
+
+    let editRef = useRef();
+    const onMountedRect = (ref) => {
+        editRef.current = ref;
+    }
 
     // Count the number of markers in each category and update the state when the visible markers change
     useEffect(() => {
@@ -24,26 +28,9 @@ export default function MapMain(props) {
         setCount(count);
     }, [visibleMarkers]);
 
-    const [selected, setSelected] = useState(null);
-    const handleCreated = (e) => {
-        const drawnShape = e.layer.toGeoJSON();
-        const selectedClusters = [];
-
-        mapRef.current.eachLayer((layer) => {
-            if (layer instanceof L.MarkerCluster && booleanContains(drawnShape, layer.toGeoJSON())) {
-                selectedClusters.push(layer.options);
-            }
-        });
-        setSelected(selectedClusters);
-    };
-
-    console.log(selected);
-
-
-
     return (<div className={"flex h-full w-full"}>
         <LeftSidebar locations={props.locations} visibleMarkers={visibleMarkers}
-                     setVisibleMarkers={setVisibleMarkers}/>
+                     setVisibleMarkers={setVisibleMarkers} editRef={editRef}/>
         <MapContainer
             bounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
             maxBounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
@@ -62,19 +49,7 @@ export default function MapMain(props) {
                 style={"outline: 1px solid transparent"}
             />
 
-            <FeatureGroup>
-                <EditControl
-                    position='topright'
-                    onCreated={handleCreated}
-                    draw={{
-                        circle: false,
-                        circlemarker: false,
-                        marker: false,
-                        polyline: false,
-                        rectangle: {showArea: false},
-                    }}
-                />
-            </FeatureGroup>
+            <MapDraw onMounted={(e) => onMountedRect(e)} editRef={editRef}/>
             <SearchBar/>
             <MapContent visibleMarkers={visibleMarkers}/>
         </MapContainer>

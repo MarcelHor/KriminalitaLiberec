@@ -3,6 +3,8 @@ import axios from "axios";
 import MapMain from "./components/MapMain.jsx";
 import Header from "./components/Header.jsx";
 
+
+
 export default function App() {
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
