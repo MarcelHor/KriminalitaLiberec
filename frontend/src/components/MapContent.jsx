@@ -19,7 +19,7 @@ export default function MapContent(props) {
     });
 
     // Add a listener to the markerClusterGroup to handle the cluster click event
-    markerClusterGroup.on("clusterclick", (cluster) => handleClusterClick(map, cluster));
+    markerClusterGroup.on("clusterclick", (cluster) => handleClusterClick(map, cluster.layer.getAllChildMarkers(), cluster.latlng));
     map.addLayer(markerClusterGroup);
 
 

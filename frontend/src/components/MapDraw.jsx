@@ -5,27 +5,40 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import "../css/draw.css";
 import L from "leaflet";
 import {booleanContains} from '@turf/turf';
+import {handleClusterClick} from "../js/ClusterClick.js";
 
-
-//
 const MapDraw = forwardRef((props, editRef) => {
     const map = useMap();
-    const [selected, setSelected] = useState(null);
     const handleCreated = (e) => {
         const drawnShape = e.layer.toGeoJSON();
         const selectedClusters = [];
         map.eachLayer((layer) => {
             if (layer instanceof L.MarkerCluster && booleanContains(drawnShape, layer.toGeoJSON())) {
-                selectedClusters.push(layer.options);
+                selectedClusters.push(layer);
             }
         });
-        setSelected(selectedClusters);
+
+        if (selectedClusters.length > 0) {
+            handleClusterClick(map, selectedClusters.map(cluster => cluster.getAllChildMarkers()).flat(), e.layer.getBounds().getCenter());
+        }
     };
 
     useEffect(() => {
-        console.log(selected);
-    }, [selected]);
+        const handleZoom = () => {
+            if (featureGroupRef.current.getLayers().length > 0) {
+                featureGroupRef.current.removeLayer(featureGroupRef.current.getLayers()[0]);
+            }
+        }
+        map.on("zoomend", handleZoom);
 
+        const handleClick = () => {
+            if (featureGroupRef.current.getLayers().length > 0) {
+                featureGroupRef.current.removeLayer(featureGroupRef.current.getLayers()[0]);
+            }
+        }
+        map.on("click", handleClick);
+
+    }, [map]);
 
     const onDrawStart = (e) => {
         if (featureGroupRef.current.getLayers().length > 0) {

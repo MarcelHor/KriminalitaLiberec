@@ -1,5 +1,4 @@
-export const handleClusterClick = (map, cluster) => {
-    const markers = cluster.layer.getAllChildMarkers();
+export const handleClusterClick = (map, markers, position) => {
 
     // Create container div
     const container = document.createElement('div');
@@ -24,7 +23,7 @@ export const handleClusterClick = (map, cluster) => {
 
     // Create popup with container div as content
     const popup = L.popup()
-        .setLatLng(cluster.latlng)
+        .setLatLng(position)
         .setContent(container)
         .openOn(map);
 
