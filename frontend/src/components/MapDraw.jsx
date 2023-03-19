@@ -1,28 +1,37 @@
-import { forwardRef, useEffect, useState } from "react";
-import { FeatureGroup } from "react-leaflet";
-import { EditControl } from "react-leaflet-draw";
+import {forwardRef, useEffect, useRef, useState} from "react";
+import {FeatureGroup, useMap} from "react-leaflet";
+import {EditControl} from "react-leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw.css";
+import "../css/draw.css";
 import L from "leaflet";
-import "leaflet-draw";
+import {booleanContains} from '@turf/turf';
 
+
+//
 const MapDraw = forwardRef((props, editRef) => {
-    const [drawing, setDrawing] = useState(false);
-
-    const onShapeDrawn = (e) => {
-        setDrawing(false);
-        e.layer.on("click", () => {
-            editRef._toolbars.edit._modes.edit.handler.enable();
+    const map = useMap();
+    const [selected, setSelected] = useState(null);
+    const handleCreated = (e) => {
+        const drawnShape = e.layer.toGeoJSON();
+        const selectedClusters = [];
+        map.eachLayer((layer) => {
+            if (layer instanceof L.MarkerCluster && booleanContains(drawnShape, layer.toGeoJSON())) {
+                selectedClusters.push(layer.options);
+            }
         });
-        e.layer.on("contextmenu", () => {
-            // do some contextmenu action here
-        });
-        e.layer.bindTooltip("Text", {
-            className:
-                "leaflet-draw-tooltip:before leaflet-draw-tooltip leaflet-draw-tooltip-visible leaflet-draw-tooltip-single",
-            sticky: true,
-            direction: "right",
-        });
+        setSelected(selectedClusters);
     };
+
+    useEffect(() => {
+        console.log(selected);
+    }, [selected]);
+
+
+    const onDrawStart = (e) => {
+        if (featureGroupRef.current.getLayers().length > 0) {
+            featureGroupRef.current.removeLayer(featureGroupRef.current.getLayers()[0]);
+        }
+    }
 
     useEffect(() => {
         if (editRef) {
@@ -32,33 +41,27 @@ const MapDraw = forwardRef((props, editRef) => {
         }
     }, [editRef]);
 
-    return (
-        <FeatureGroup>
-            <EditControl
-                onMounted={props.onMounted}
-                position="topright"
-                onCreated={onShapeDrawn}
-                draw={{
-                    circle: false,
-                    polyline: false,
-                    circlemarker: false,
-                    marker: false,
-                    polygon: {
-                        allowIntersection: false,
-                        shapeOptions: {
-                            color: "#ff0000",
-                        },
+    const featureGroupRef = useRef();
+    return (<FeatureGroup ref={featureGroupRef}>
+        <EditControl
+            ref={editRef}
+            onMounted={props.onMounted}
+            position="topright"
+            onCreated={handleCreated}
+            onDrawStart={onDrawStart}
+            draw={{
+                circle: false, polyline: false, circlemarker: false, marker: false, polygon: {
+                    allowIntersection: false, shapeOptions: {
+                        color: "#ff0000",
                     },
-                    rectangle: {
-                        shapeOptions: {
-                            color: "#ff0000",
-                        },
-                        showArea: false,
-                    },
-                }}
-            />
-        </FeatureGroup>
-    );
+                }, rectangle: {
+                    shapeOptions: {
+                        color: "#ff0000",
+                    }, showArea: false,
+                },
+            }}
+        />
+    </FeatureGroup>);
 });
 
 export default MapDraw;
