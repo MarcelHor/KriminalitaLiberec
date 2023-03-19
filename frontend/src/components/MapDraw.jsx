@@ -5,7 +5,7 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import "../css/draw.css";
 import L from "leaflet";
 import {booleanContains} from '@turf/turf';
-import {handleClusterClick} from "../js/ClusterClick.js";
+import {mapItemClick} from "../js/mapItemClick.js";
 
 const MapDraw = forwardRef((props, editRef) => {
     const map = useMap();
@@ -23,26 +23,21 @@ const MapDraw = forwardRef((props, editRef) => {
 
         const clusterChildren = selectedClusters.map(cluster => cluster.getAllChildMarkers()).flat();
         const allMarkers = [...selectedMarkers, ...clusterChildren];
-        console.log(allMarkers);
         if (allMarkers.length > 0) {
-            handleClusterClick(map, allMarkers, e.layer.getBounds().getCenter());
+            mapItemClick(map, allMarkers, e.layer.getBounds().getCenter());
         }
     };
 
     useEffect(() => {
-        const handleZoom = () => {
-            if (featureGroupRef.current.getLayers().length > 0) {
-                featureGroupRef.current.removeLayer(featureGroupRef.current.getLayers()[0]);
-            }
-        }
-        map.on("zoomend", handleZoom);
 
-        const handleClick = () => {
+        const handleChange = () => {
             if (featureGroupRef.current.getLayers().length > 0) {
                 featureGroupRef.current.removeLayer(featureGroupRef.current.getLayers()[0]);
             }
         }
-        map.on("click", handleClick);
+
+
+        map.on("popupclose", handleChange);
 
     }, [map]);
 
@@ -50,6 +45,7 @@ const MapDraw = forwardRef((props, editRef) => {
         if (featureGroupRef.current.getLayers().length > 0) {
             featureGroupRef.current.removeLayer(featureGroupRef.current.getLayers()[0]);
         }
+        map.closePopup();
     }
 
     useEffect(() => {
