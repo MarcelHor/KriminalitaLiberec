@@ -8,7 +8,6 @@ import markerClusterGroup from "react-leaflet-cluster";
 export default function MapContent(props) {
     const map = useMap();
     const locations = props.visibleMarkers;
-
     // Create a markerClusterGroup to hold the markers
     const markerClusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,

@@ -12,14 +12,20 @@ const MapDraw = forwardRef((props, editRef) => {
     const handleCreated = (e) => {
         const drawnShape = e.layer.toGeoJSON();
         const selectedClusters = [];
+        const selectedMarkers = [];
         map.eachLayer((layer) => {
             if (layer instanceof L.MarkerCluster && booleanContains(drawnShape, layer.toGeoJSON())) {
                 selectedClusters.push(layer);
+            } else if (layer instanceof L.Marker && booleanContains(drawnShape, layer.toGeoJSON())) {
+                selectedMarkers.push(layer);
             }
         });
 
-        if (selectedClusters.length > 0) {
-            handleClusterClick(map, selectedClusters.map(cluster => cluster.getAllChildMarkers()).flat(), e.layer.getBounds().getCenter());
+        const clusterChildren = selectedClusters.map(cluster => cluster.getAllChildMarkers()).flat();
+        const allMarkers = [...selectedMarkers, ...clusterChildren];
+        console.log(allMarkers);
+        if (allMarkers.length > 0) {
+            handleClusterClick(map, allMarkers, e.layer.getBounds().getCenter());
         }
     };
 
