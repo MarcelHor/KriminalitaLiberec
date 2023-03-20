@@ -14,6 +14,7 @@ export default function MapMain(props) {
     const [count, setCount] = useState({});
     const mapRef = useRef();
 
+
     let editRef = useRef();
     const onMountedRect = (ref) => {
         editRef.current = ref;

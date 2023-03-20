@@ -33,11 +33,12 @@ export default function MapContent(props) {
         const markerLayers = locations.map(location => {
             const marker = L.marker([location.coordinates[1], location.coordinates[0]]);
             marker.bindPopup(`
-      <div>
-        <h1>${location.properties.crime.name}</h1>
-        <p>${location.properties.crime.description}</p>
-      </div>
-    `);
+          <div>
+            <h1>${location.properties.crime.name}</h1>
+            <p>${location.properties.date}</p>
+            <p>${location.properties.crime.description}</p>
+          </div>
+        `);
             return marker;
         });
 
