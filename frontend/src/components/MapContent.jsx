@@ -1,24 +1,24 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useMap} from 'react-leaflet';
-import {createClusterCustomIcon, createMarkerCustomIcon} from "../js/MapIcons.js";
-import {handleClusterClick} from "../js/ClusterClick.js";
-import MarkerClusterGroup    from "react-leaflet-cluster";
+import {createClusterCustomIcon} from "../js/MapIcons.js";
+import {mapItemClick} from "../js/mapItemClick.js";
+import markerClusterGroup from "react-leaflet-cluster";
+
 // This component is used to add the markers to the map and handle input from the user
 export default function MapContent(props) {
     const map = useMap();
     const locations = props.visibleMarkers;
-
     // Create a markerClusterGroup to hold the markers
     const markerClusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
         iconCreateFunction: createClusterCustomIcon,
-        maxClusterRadius: 150,
+        maxClusterRadius: 200,
         zoomToBoundsOnClick: false,
         singleMarkerMode: true,
     });
 
     // Add a listener to the markerClusterGroup to handle the cluster click event
-    markerClusterGroup.on("clusterclick", (cluster) => handleClusterClick(map, cluster));
+    markerClusterGroup.on("clusterclick", (cluster) => mapItemClick(map, cluster.layer.getAllChildMarkers(), cluster.latlng));
     map.addLayer(markerClusterGroup);
 
 
@@ -31,10 +31,7 @@ export default function MapContent(props) {
         markerClusterGroup.clearLayers();
 
         const markerLayers = locations.map(location => {
-            const marker = L.marker([location.coordinates[1], location.coordinates[0]], {
-                icon: createMarkerCustomIcon('#ff3333')
-            });
-
+            const marker = L.marker([location.coordinates[1], location.coordinates[0]]);
             marker.bindPopup(`
       <div>
         <h1>${location.properties.crime.name}</h1>
@@ -53,4 +50,6 @@ export default function MapContent(props) {
             markerClusterGroup.clearLayers();
         };
     }, [locations, map, markerClusterGroup]);
+
+    return null;
 }

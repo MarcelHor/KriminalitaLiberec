@@ -72,17 +72,3 @@ export const createClusterCustomIcon = function (cluster) {
     return icon;
 };
 
-export const createMarkerCustomIcon = function (color) {
-    const iconDiv = document.createElement('div');
-    iconDiv.style.backgroundColor = color;
-    iconDiv.style.width = '30px';
-    iconDiv.style.height = '30px';
-    iconDiv.style.borderRadius = '50%';
-    iconDiv.style.boxShadow = '0px 0px 6px rgba(0, 0, 0, 0.5)';
-    iconDiv.innerHTML = `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: bold; color: white;">1</div>`;
-    const icon = L.divIcon({
-        html: iconDiv, className: 'marker-custom', iconSize: L.point(30, 30), iconAnchor: L.point(15, 15),
-    });
-    return icon;
-};
-
