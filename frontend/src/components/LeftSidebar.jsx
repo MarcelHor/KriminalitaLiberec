@@ -1,6 +1,8 @@
 import select_multiple from "../assets/select_multiple.svg";
 import select_line from "../assets/select_line.svg";
 import select_arrow from "../assets/select_arrow.svg";
+import {useEffect} from "react";
+
 export default function LeftSidebar(props) {
     // Get reference to EditControl component
     const editRef = props.editRef;
@@ -9,21 +11,25 @@ export default function LeftSidebar(props) {
     // If checked, add markers to visibleMarkers
     // If unchecked, remove markers from visibleMarkers
     // This is done by filtering visibleMarkers
-    const handleCheckboxChange = (event) => {
-        const {name, checked} = event.target;
-        if (checked) {
-            const newMarkers = props.locations.filter(marker => marker.properties.crime.name === name);
-            props.setVisibleMarkers(prevState => [...prevState, ...newMarkers]);
-        } else {
-            const newMarkers = props.visibleMarkers.filter(marker => marker.properties.crime.name !== name);
-            props.setVisibleMarkers(newMarkers);
-        }
-    }
+
 
     // Set removes duplicates to get unique names
     // Spread operator converts set to array to be able to map over it
     const uniqueNames = [...new Set(props.locations.map(marker => marker.properties.crime.name))];
 
+    const handleCheckboxChange = (event) => {
+        //set selectedMarkers to array of names of selected checkboxes
+        if (event.target.checked) {
+            props.setSelectedMarkers([...props.selectedMarkers, event.target.name]);
+        }
+        else {
+            props.setSelectedMarkers(props.selectedMarkers.filter(name => name !== event.target.name));
+        }
+    }
+
+    useEffect(() => {
+        props.setSelectedMarkers(uniqueNames);
+    },[])
     return (<div className="p-4 w-1/4 h-full grid grid-cols-1">
         <div>
             <h1 className={"text-xl"}>Nástroje</h1>

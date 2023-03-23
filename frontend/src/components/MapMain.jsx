@@ -9,7 +9,11 @@ import MapDraw from "./MapDraw.jsx";
 
 export default function MapMain(props) {
     // State for the visible markers on the map (used for filtering)
-    const [visibleMarkers, setVisibleMarkers] = useState(props.locations);
+    const [visibleMarkers, setVisibleMarkers] = useState([]);
+    const [selectedMarkers, setSelectedMarkers] = useState([]);
+    const [dateRangeMarkers, setDateRangeMarkers] = useState([]);
+
+
     // State for the number of markers in each category (used for the sidebar)
     const [count, setCount] = useState({});
     const mapRef = useRef();
@@ -20,7 +24,13 @@ export default function MapMain(props) {
         editRef.current = ref;
     }
 
-    // Count the number of markers in each category and update the state when the visible markers change
+    useEffect(() => {
+        //set visibleMarkers to dateRangeMarkers with names in selectedMarkers
+        setVisibleMarkers(dateRangeMarkers.filter(marker => selectedMarkers.includes(marker.properties.crime.name)));
+    }, [selectedMarkers, dateRangeMarkers]);
+
+
+// Count the number of markers in each category and update the state when the visible markers change
     useEffect(() => {
         const count = visibleMarkers.reduce((counts, crime) => {
             const crimeName = crime.properties.crime.name;
@@ -31,8 +41,8 @@ export default function MapMain(props) {
     }, [visibleMarkers]);
 
     return (<div className={"flex h-full w-full"}>
-        <LeftSidebar locations={props.locations} visibleMarkers={visibleMarkers}
-                     setVisibleMarkers={setVisibleMarkers} editRef={editRef}/>
+        <LeftSidebar locations={props.locations} setSelectedMarkers={setSelectedMarkers}
+                     editRef={editRef} selectedMarkers={selectedMarkers}/>
 
         <MapContainer
             bounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
@@ -57,6 +67,6 @@ export default function MapMain(props) {
             <MapContent visibleMarkers={visibleMarkers}/>
 
         </MapContainer>
-        <RightSidebar count={count}/>
+        <RightSidebar count={count} setDateRangeMarkers={setDateRangeMarkers} locations={props.locations}/>
     </div>);
 }
