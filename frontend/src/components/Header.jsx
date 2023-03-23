@@ -22,7 +22,7 @@ export default function Header() {
             <nav>
                 <ul className="flex items-center">
                     <li
-                        className="hover:bg-white hover:bg-opacity-5 rounded p-2 mr-4"
+                        className="hover:bg-white hover:bg-opacity-5 rounded p-2 mr-4 cursor-pointer"
                         onClick={() =>
                             openPopup('Nápověda', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, quia.')
                         }
@@ -30,7 +30,7 @@ export default function Header() {
                         NÁPOVĚDA
                     </li>
                     <li
-                        className="hover:bg-white hover:bg-opacity-5 rounded p-2 mr-4"
+                        className="hover:bg-white hover:bg-opacity-5 rounded p-2 mr-4 cursor-pointer"
                         onClick={() =>
                             openPopup('O projektu', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, quia.')
                         }
@@ -38,7 +38,7 @@ export default function Header() {
                         O PROJEKTU
                     </li>
                     <li
-                        className="hover:bg-white hover:bg-opacity-5 rounded p-2 mr-4"
+                        className="hover:bg-white hover:bg-opacity-5 rounded p-2 mr-4 cursor-pointer"
                         onClick={() =>
                             openPopup('Kontakt', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, quia.')
                         }

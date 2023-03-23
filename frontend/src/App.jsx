@@ -30,7 +30,7 @@ export default function App() {
 
     useEffect(() => {
         if (error) {
-            if (fetchCount >= 5) {
+            if (fetchCount >= 3) {
                 alert("Error, please try refreshing the page or contact the administrator.")
                 return;
             }
