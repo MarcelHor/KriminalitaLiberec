@@ -1,7 +1,8 @@
 import select_multiple from "../assets/select_multiple.svg";
 import select_line from "../assets/select_line.svg";
 import select_arrow from "../assets/select_arrow.svg";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 export default function LeftSidebar(props) {
     // Get reference to EditControl component
@@ -9,20 +10,27 @@ export default function LeftSidebar(props) {
 
     // Set removes duplicates to get unique names
     // Spread operator converts set to array to be able to map over it
-    const uniqueNames = [...new Set(props.locations.map(marker => marker.properties.crime.name))];
+    const [uniqueNames, setUniqueNames] = useState([])
 
-    //initially set selectedMarkers to all unique names
+    //fetch all crimes names and init
     useEffect(() => {
-        props.setSelectedMarkers(uniqueNames);
-    },[])
+        axios.get("http://localhost:3000/crimes/names")
+            .then(res => {
+                setUniqueNames(res.data)
+                props.setSelectedMarkers(res.data);
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [])
+
 
     // Handle checkbox change and update selectedMarkers
     const handleCheckboxChange = (event) => {
         //set selectedMarkers to array of names of selected checkboxes
         if (event.target.checked) {
             props.setSelectedMarkers([...props.selectedMarkers, event.target.name]);
-        }
-        else {
+        } else {
             props.setSelectedMarkers(props.selectedMarkers.filter(name => name !== event.target.name));
         }
     }
@@ -57,8 +65,9 @@ export default function LeftSidebar(props) {
 
         <div>
             <h1 className={"text-xl"}>Vrstvy</h1>
-            {uniqueNames.map((name, index) => (<div className={"pt-4"} key={index}>
+            {uniqueNames.map((name, index) => (<div className={"pt-4 text-xs"} key={index}>
                 <div className=" w-full flex items-center rounded-l space-x-2">
+                    <span className={"inline-block w-4 h-4 rounded-full bg-amber-300"}></span>
                     <input type="checkbox" defaultChecked={true} name={name} onChange={handleCheckboxChange}
                            className="inline-block w-8"/>
                     <span>{name}</span>
