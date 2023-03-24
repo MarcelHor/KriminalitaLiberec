@@ -8,29 +8,44 @@ import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
 
 export default function MapMain(props) {
-    // State for the visible markers on the map (used for filtering)
-    const [visibleMarkers, setVisibleMarkers] = useState([]);
-    const [selectedMarkers, setSelectedMarkers] = useState([]);
-    const [dateRangeMarkers, setDateRangeMarkers] = useState([]);
-
-
-    // State for the number of markers in each category (used for the sidebar)
-    const [count, setCount] = useState({});
     const mapRef = useRef();
 
+    // State for the visible markers on the map (used for filtering)
+    const [visibleMarkers, setVisibleMarkers] = useState([]);
+    // State for the selected markers in the sidebar (used for filtering)
+    const [selectedMarkers, setSelectedMarkers] = useState([]);
+    // State for the date chosen in the date picker (used for filtering)
+    const [dateRange, setDateRange] = useState([]);
 
+    // Filter visible markers when locations, selectedMarkers or dateRange change
+    useEffect(() => {
+        setVisibleMarkers(props.locations.filter(location => {
+            // Check if location's crime type is in selectedMarkers
+            if (!selectedMarkers.includes(location.properties.crime.name)) {
+                return false;
+            }
+
+            // Check if location's date is within dateRange
+            const locationDate = new Date(location.properties.date);
+            if (locationDate < dateRange[0] || locationDate > dateRange[1]) {
+                return false;
+            }
+
+            // If location passes both filters, add it to visibleMarkers
+            return true;
+        }));
+    }, [props.locations, selectedMarkers, dateRange]);
+
+
+    // Get reference to EditControl component
     let editRef = useRef();
     const onMountedRect = (ref) => {
         editRef.current = ref;
     }
 
-    useEffect(() => {
-        //set visibleMarkers to dateRangeMarkers with names in selectedMarkers
-        setVisibleMarkers(dateRangeMarkers.filter(marker => selectedMarkers.includes(marker.properties.crime.name)));
-    }, [selectedMarkers, dateRangeMarkers]);
-
-
-// Count the number of markers in each category and update the state when the visible markers change
+    // State for the number of markers in each category (used for the pie chart)
+    const [count, setCount] = useState({});
+    // Count the number of markers in each category and update the state when the visible markers change
     useEffect(() => {
         const count = visibleMarkers.reduce((counts, crime) => {
             const crimeName = crime.properties.crime.name;
@@ -67,6 +82,6 @@ export default function MapMain(props) {
             <MapContent visibleMarkers={visibleMarkers}/>
 
         </MapContainer>
-        <RightSidebar count={count} setDateRangeMarkers={setDateRangeMarkers} locations={props.locations}/>
+        <RightSidebar count={count} setDateRange={setDateRange} dateRange={dateRange} locations={props.locations}/>
     </div>);
 }

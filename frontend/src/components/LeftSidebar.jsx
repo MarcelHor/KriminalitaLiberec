@@ -7,16 +7,16 @@ export default function LeftSidebar(props) {
     // Get reference to EditControl component
     const editRef = props.editRef;
 
-    // Handle checkbox change
-    // If checked, add markers to visibleMarkers
-    // If unchecked, remove markers from visibleMarkers
-    // This is done by filtering visibleMarkers
-
-
     // Set removes duplicates to get unique names
     // Spread operator converts set to array to be able to map over it
     const uniqueNames = [...new Set(props.locations.map(marker => marker.properties.crime.name))];
 
+    //initially set selectedMarkers to all unique names
+    useEffect(() => {
+        props.setSelectedMarkers(uniqueNames);
+    },[])
+
+    // Handle checkbox change and update selectedMarkers
     const handleCheckboxChange = (event) => {
         //set selectedMarkers to array of names of selected checkboxes
         if (event.target.checked) {
@@ -27,9 +27,6 @@ export default function LeftSidebar(props) {
         }
     }
 
-    useEffect(() => {
-        props.setSelectedMarkers(uniqueNames);
-    },[])
     return (<div className="p-4 w-1/4 h-full grid grid-cols-1">
         <div>
             <h1 className={"text-xl"}>Nástroje</h1>
@@ -67,7 +64,6 @@ export default function LeftSidebar(props) {
                     <span>{name}</span>
                 </div>
             </div>))}
-
         </div>
     </div>)
 }

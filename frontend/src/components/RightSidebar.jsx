@@ -1,13 +1,12 @@
 import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
 import {Pie} from 'react-chartjs-2';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker'
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-export default function RightSidebar({count, setDateRangeMarkers, locations}) {
-    const labels = Object.keys(count);
-    const data = Object.values(count);
+export default function RightSidebar(props) {
+    const labels = Object.keys(props.count);
+    const data = Object.values(props.count);
     const config = {
         labels: labels, datasets: [{
             data: data,
@@ -17,31 +16,16 @@ export default function RightSidebar({count, setDateRangeMarkers, locations}) {
         },],
     };
 
-    const [dateRange, setDateRange] = useState([]);
-
     const handleDateChange = (date) => {
-        setDateRange(date);
-        setDateRangeMarkers(
-            locations.filter((location) => {
-                const locationDate = new Date(location.properties.date);
-                return locationDate >= date[0] && locationDate <= date[1];
-            })
-        );
+        props.setDateRange(date);
     };
 
+    // Set default date range to last month
     useEffect(() => {
         const date = new Date();
         date.setMonth(date.getMonth() - 1);
-        setDateRange([date, new Date()]);
-        setDateRangeMarkers(
-            locations.filter((location) => {
-                const locationDate = new Date(location.properties.date);
-                return locationDate >= date && locationDate <= new Date();
-
-            })
-        );
+        props.setDateRange([date, new Date()]);
     }, []);
-
 
     return (<div className={"w-1/4 h-full p-2 "}>
         <div>
@@ -52,7 +36,7 @@ export default function RightSidebar({count, setDateRangeMarkers, locations}) {
             <h1 className={"text-xl"}>Filter</h1>
             <DateRangePicker
                 onChange={handleDateChange}
-                value={dateRange}
+                value={props.dateRange}
                 clearIcon={null}
             />
         </div>
