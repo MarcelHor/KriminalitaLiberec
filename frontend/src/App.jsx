@@ -9,6 +9,7 @@ export default function App() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [fetchCount, setCount] = useState(0);
+
     const fetchData = () => {
         setError(false);
         setLoading(true);

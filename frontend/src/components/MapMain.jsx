@@ -1,6 +1,5 @@
 import {MapContainer, TileLayer} from "react-leaflet";
 import SearchBar from "./SearchBar.jsx";
-import LeftSidebar from "./LeftSidebar.jsx";
 import RightSidebar from "./RightSidebar.jsx";
 import MapContent from "./MapContent.jsx";
 import {useEffect, useRef, useState} from "react";
@@ -56,8 +55,6 @@ export default function MapMain(props) {
     }, [visibleMarkers]);
 
     return (<div className={"flex h-full w-full"}>
-        <LeftSidebar locations={props.locations} setSelectedMarkers={setSelectedMarkers}
-                     editRef={editRef} selectedMarkers={selectedMarkers}/>
 
         <MapContainer
             bounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
@@ -68,7 +65,7 @@ export default function MapMain(props) {
             zoomControl={true}
             center={[50.7572, 15.0560]}
             scrollWheelZoom={true}
-            className={"h-full w-full z-0"}
+            className={" h-[calc(100vh-80px)] w-full z-0"}
             ref={mapRef}
         >
 
@@ -82,6 +79,8 @@ export default function MapMain(props) {
             <MapContent visibleMarkers={visibleMarkers}/>
 
         </MapContainer>
-        <RightSidebar count={count} setDateRange={setDateRange} dateRange={dateRange} locations={props.locations}/>
+        <RightSidebar locations={props.locations} setSelectedMarkers={setSelectedMarkers}
+                      editRef={editRef} selectedMarkers={selectedMarkers} count={count} setDateRange={setDateRange}
+                      dateRange={dateRange} locations={props.locations}/>
     </div>);
 }
