@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@changey/react-leaflet-markercluster": "^4.0.0-rc1",
+    "@wojtekmaj/react-daterange-picker": "^4.2.0",
     "axios": "^1.3.3",
     "leaflet": "^1.9.3",
     "leaflet-geosearch": "^3.7.0",

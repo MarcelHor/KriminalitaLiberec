@@ -32,12 +32,15 @@ export default function MapContent(props) {
 
         const markerLayers = locations.map(location => {
             const marker = L.marker([location.coordinates[1], location.coordinates[0]]);
+            const date = new Date(location.properties.date);
+            const dateStr = date.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' });
             marker.bindPopup(`
-      <div>
-        <h1>${location.properties.crime.name}</h1>
-        <p>${location.properties.crime.description}</p>
-      </div>
-    `);
+          <div>
+            <h1>${location.properties.crime.name}</h1>
+            <p>${dateStr}</p>
+            <p>${location.properties.crime.description}</p>
+          </div>
+        `);
             return marker;
         });
 

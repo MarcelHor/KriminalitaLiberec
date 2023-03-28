@@ -8,6 +8,14 @@ router.get('/', (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
+//get all unique crime names
+router.get('/names', (req, res) => {
+    Crime.find().distinct('name')
+        .then(crimes => res.json(crimes))
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+
 router.post('/', (req, res) => {
     const { _id, name, description } = req.body;
     const newCrime = new Crime({

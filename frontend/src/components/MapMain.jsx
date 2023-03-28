@@ -8,17 +8,43 @@ import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
 
 export default function MapMain(props) {
-    // State for the visible markers on the map (used for filtering)
-    const [visibleMarkers, setVisibleMarkers] = useState(props.locations);
-    // State for the number of markers in each category (used for the sidebar)
-    const [count, setCount] = useState({});
     const mapRef = useRef();
 
+    // State for the visible markers on the map (used for filtering)
+    const [visibleMarkers, setVisibleMarkers] = useState([]);
+    // State for the selected markers in the sidebar (used for filtering)
+    const [selectedMarkers, setSelectedMarkers] = useState([]);
+    // State for the date chosen in the date picker (used for filtering)
+    const [dateRange, setDateRange] = useState([]);
+
+    // Filter visible markers when locations, selectedMarkers or dateRange change
+    useEffect(() => {
+        setVisibleMarkers(props.locations.filter(location => {
+            // Check if location's crime type is in selectedMarkers
+            if (!selectedMarkers.includes(location.properties.crime.name)) {
+                return false;
+            }
+
+            // Check if location's date is within dateRange
+            const locationDate = new Date(location.properties.date);
+            if (locationDate < dateRange[0] || locationDate > dateRange[1]) {
+                return false;
+            }
+
+            // If location passes both filters, add it to visibleMarkers
+            return true;
+        }));
+    }, [props.locations, selectedMarkers, dateRange]);
+
+
+    // Get reference to EditControl component
     let editRef = useRef();
     const onMountedRect = (ref) => {
         editRef.current = ref;
     }
 
+    // State for the number of markers in each category (used for the pie chart)
+    const [count, setCount] = useState({});
     // Count the number of markers in each category and update the state when the visible markers change
     useEffect(() => {
         const count = visibleMarkers.reduce((counts, crime) => {
@@ -30,8 +56,8 @@ export default function MapMain(props) {
     }, [visibleMarkers]);
 
     return (<div className={"flex h-full w-full"}>
-        <LeftSidebar locations={props.locations} visibleMarkers={visibleMarkers}
-                     setVisibleMarkers={setVisibleMarkers} editRef={editRef}/>
+        <LeftSidebar locations={props.locations} setSelectedMarkers={setSelectedMarkers}
+                     editRef={editRef} selectedMarkers={selectedMarkers}/>
 
         <MapContainer
             bounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
@@ -56,6 +82,6 @@ export default function MapMain(props) {
             <MapContent visibleMarkers={visibleMarkers}/>
 
         </MapContainer>
-        <RightSidebar count={count}/>
+        <RightSidebar count={count} setDateRange={setDateRange} dateRange={dateRange} locations={props.locations}/>
     </div>);
 }
