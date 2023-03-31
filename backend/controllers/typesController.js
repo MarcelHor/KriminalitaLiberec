@@ -1,13 +1,18 @@
 const pool = require('../db');
 
 const getAllTypes = async () => {
-    const rows = await pool.query('SELECT IF(t2.label IS NULL, t1.name, t1.label) AS crime_type, t2.name, t3.label, t4.label\n' +
-        'FROM crime_types t1\n' +
-        '         LEFT JOIN crime_types t2 ON t1.parent_id1 = t2.id\n' +
-        '         LEFT JOIN crime_types t3 ON t1.parent_id2 = t3.id\n' +
-        '         LEFT JOIN crime_types t4 ON t1.parent_id3 = t4.id');
+    const rows = await pool.query('select t1.label as "crime_type",\n' +
+        '       t2.label as "crime_type_parent1",\n' +
+        '       t3.label as "crime_type_parent2",\n' +
+        '       t4.label as "crime_type_parent3"\n' +
+        'from crime_types t1\n' +
+        '         left join crime_types t2 on t1.parent_id1 = t2.id\n' +
+        '         left join crime_types t3 on t1.parent_id2 = t3.id\n' +
+        '         left join crime_types t4 on t1.parent_id3 = t4.id\n' +
+        'order by t1.id asc');
     return rows;
 }
+
 
 module.exports = {
     getAllTypes
