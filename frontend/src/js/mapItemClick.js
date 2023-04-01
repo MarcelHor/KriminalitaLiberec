@@ -1,6 +1,26 @@
-// on click of a marker, open a popup with the marker's content and buttons to cycle through other markers
-// if there is only one marker, no buttons are added
+import axios from 'axios';
+
 export const mapItemClick = (map, markers, position) => {
+    const container = document.createElement('div');
+    const contentContainer = document.createElement('div');
+    const buttonContainer = document.createElement('div');
+    const popupContent = document.createElement('div');
+
+
+
+    const markerIds = markers.map((marker) => marker.options.id);
+    let data;
+    axios.get(`http://localhost:3000/api/data/${markerIds}`)
+        .then((response) => {
+            data = response.data;
+            cycleMarkers(0);
+            contentContainer.appendChild(popupContent);
+            container.appendChild(contentContainer);
+            container.appendChild(buttonContainer);
+        }).catch((error) => {
+        console.log(error);
+    });
+
     let currentMarkerIndex = 0;
     const cycleMarkers = (increment) => {
         currentMarkerIndex += increment;
@@ -9,44 +29,57 @@ export const mapItemClick = (map, markers, position) => {
         } else if (currentMarkerIndex >= markers.length) {
             currentMarkerIndex = 0;
         }
-        popupContent.innerHTML = markers[currentMarkerIndex].getPopup().getContent();
+        const date = new Date(data[currentMarkerIndex].date);
+        const dateStr = date.toLocaleDateString('cs-CZ', {day: 'numeric', month: 'numeric', year: 'numeric'});
+        const timeStr = date.toLocaleTimeString('cs-CZ', {hour: 'numeric', minute: 'numeric'});
+        popupContent.innerHTML = `
+            <div>
+                <h1>${data[currentMarkerIndex].crime_type}</h1>
+                <p>${dateStr}</p>
+                <p>${timeStr}</p>
+                <p>${data[currentMarkerIndex].state}</p>
+                <p> 
+                    ${data[currentMarkerIndex].crime_type}
+                    ${data[currentMarkerIndex].crime_type_parent1 && data[currentMarkerIndex].crime_type_parent1 !== data[currentMarkerIndex].crime_type ? `, ${data[currentMarkerIndex].crime_type_parent1}` : ''}
+                    ${data[currentMarkerIndex].crime_type_parent2 ? `, ${data[currentMarkerIndex].crime_type_parent2}` : ''}
+                    ${data[currentMarkerIndex].crime_type_parent3 ? `, ${data[currentMarkerIndex].crime_type_parent3}` : ''}
+                </p>
+            </div>
+        `;
         count.textContent = `(${currentMarkerIndex + 1}/${markers.length})`;
     };
 
-    // Create container div for popup content
-    const container = document.createElement('div');
-
-    // Add popup content to container div
-    const content = markers[0].getPopup().getContent();
-    const popupContent = document.createElement('div');
-    popupContent.innerHTML = content;
-    container.appendChild(popupContent);
-
-    // Add buttons to container div if there is more than one marker
+    // Add buttons to button container div if there is more than one marker
     if (markers.length > 1) {
-        // Add buttons to container div
+        // Add buttons to button container div
         const prevButton = document.createElement('button');
         prevButton.textContent = 'Previous';
         prevButton.addEventListener('click', () => cycleMarkers(-1));
-        container.appendChild(prevButton);
+        buttonContainer.appendChild(prevButton);
         prevButton.style.marginRight = '10px';
 
         const nextButton = document.createElement('button');
         nextButton.textContent = 'Next';
         nextButton.addEventListener('click', () => cycleMarkers(1));
-        container.appendChild(nextButton);
+        buttonContainer.appendChild(nextButton);
     }
 
     const count = document.createElement('span');
     count.style.marginLeft = '10px';
     count.textContent = `(${currentMarkerIndex + 1}/${markers.length})`;
-    container.appendChild(count);
+    buttonContainer.appendChild(count);
 
+    // Set CSS styles to arrange the content and buttons vertically
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    contentContainer.style.marginBottom = '10px';
     // Create popup with container div as content
-    const popup = L.popup()
+    const popup = L.popup({
+        minWidth: 200,
+    })
         .setLatLng(position)
         .setContent(container)
-        .openOn(map);
+        .openOn(map)
 
     map.on('zoomend', function () {
         popup.remove();

@@ -12,6 +12,7 @@ app.use('/', router);
 app.use('/', typesRouter);
 
 
+
 //listening
 app.listen(3000, () => {
     console.log('Server is running on port 3000');

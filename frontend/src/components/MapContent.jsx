@@ -14,10 +14,11 @@ export default function MapContent(props) {
         maxClusterRadius: 200,
         zoomToBoundsOnClick: false,
         singleMarkerMode: true,
-        iconCreateFunction: createClusterCustomIcon,
         spiderfyOnMaxZoom: false,
         chunkedLoading: true,
-        chunkSize: 50
+        chunkProgress: (processed, total, elapsed) => {
+            console.log(processed, total, elapsed);
+        }
     });
 
     // Add a listener to the markerClusterGroup to handle the cluster click event
@@ -25,46 +26,14 @@ export default function MapContent(props) {
     map.addLayer(markerClusterGroup);
 
 
-    // Add the markers to the markerClusterGroup when the locations change or the map is loaded for the first time
-    useEffect(() => {
-        // If the map is not loaded yet, return
-        if (!markerClusterGroup) return;
+    const markerLayers = locations.map(location => {
+        const marker = L.marker([location.y, location.x], {id: location.id});
+        marker.bindPopup(`<h1>${location.crime_type}</h1>`);
+        return marker;
+    });
 
-        // Clear the existing markers in the markerClusterGroup
-        markerClusterGroup.clearLayers();
-
-        const markerLayers = locations.map(location => {
-            const marker = L.marker([location.y, location.x]);
-            const date = new Date(location.date);
-            const dateStr = date.toLocaleDateString('cs-CZ', {day: 'numeric', month: 'numeric', year: 'numeric'});
-            const timeStr = date.toLocaleTimeString('cs-CZ', {hour: 'numeric', minute: 'numeric'});
-            marker.bindPopup(`
-          <div>
-            <h1>${location.crime_type}</h1>
-            <p>${dateStr}</p>
-            <p>${timeStr}</p>
-            <p>${location.state}</p>
-            <p>
-                ${location.crime_type}
-                ${location.crime_type_parent1 && location.crime_type_parent1 !== location.crime_type ? `, ${location.crime_type_parent1}` : ''}
-                ${location.crime_type_parent2 ? `, ${location.crime_type_parent2}` : ''}
-                ${location.crime_type_parent3 ? `, ${location.crime_type_parent3}` : ''}
-            </p>
-
-          </div>
-        `);
-            return marker;
-        });
-
-        markerClusterGroup.addLayers(markerLayers);
-        map.closePopup();
-
-        // Remove the markerClusterGroup and clear the markers when the component is unmounted
-        return () => {
-            map.removeLayer(markerClusterGroup);
-            markerClusterGroup.clearLayers();
-        };
-    }, [locations, map, markerClusterGroup]);
+    // Add the markers to the markerClusterGroup
+    markerClusterGroup.addLayers(markerLayers);
 
     return null;
 }
