@@ -13,15 +13,21 @@ export const createClusterCustomIcon = function (cluster) {
 
     // Define the colors for each category
     const categoryColors = {
-        'Obecněnebezpečná': '#ff3333',
-        'Požáry': '#ff9933',
-        'Extremismus': '#ffff33',
-        'výbuchy': '#33ff33',
-        'Dopravnínehody': '#3388ff',
-        'KrádežePodvody': '#9933ff',
-        'Zbraně': '#ff33ff',
-        'Jinámajetková': '#ff3888',
-        'Toxikománie': '#ff9933',
+        "Násilná": '#af0000',
+        "Přestupky": '#ff8000',
+        "Požáryvýbuchy": '#ff0000',
+        "Krádeže": '#007e00',
+        "Krádeževloupáním": '#00ffff',
+        "Jinámajetková": '#00f600',
+        "Obecněnebezpečná": '#8000ff',
+        "Toxikománie": '#ff00ff',
+        "Zbraně": '#eaa500',
+        "Extremismus": '#ff0000',
+        "Podvody": '#00a200',
+        "Dopravnínehody": '#ffff00',
+
+
+
     };
 
     // Define the radius and line width for the ring chart

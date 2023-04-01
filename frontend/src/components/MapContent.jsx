@@ -11,10 +11,13 @@ export default function MapContent(props) {
     // Create a markerClusterGroup to hold the markers
     const markerClusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
-        iconCreateFunction: createClusterCustomIcon,
         maxClusterRadius: 200,
         zoomToBoundsOnClick: false,
         singleMarkerMode: true,
+        iconCreateFunction: createClusterCustomIcon,
+        spiderfyOnMaxZoom: false,
+        chunkedLoading: true,
+        chunkSize: 50
     });
 
     // Add a listener to the markerClusterGroup to handle the cluster click event
@@ -31,14 +34,23 @@ export default function MapContent(props) {
         markerClusterGroup.clearLayers();
 
         const markerLayers = locations.map(location => {
-            const marker = L.marker([location.coordinates[1], location.coordinates[0]]);
-            const date = new Date(location.properties.date);
-            const dateStr = date.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' });
+            const marker = L.marker([location.y, location.x]);
+            const date = new Date(location.date);
+            const dateStr = date.toLocaleDateString('cs-CZ', {day: 'numeric', month: 'numeric', year: 'numeric'});
+            const timeStr = date.toLocaleTimeString('cs-CZ', {hour: 'numeric', minute: 'numeric'});
             marker.bindPopup(`
           <div>
-            <h1>${location.properties.crime.name}</h1>
+            <h1>${location.crime_type}</h1>
             <p>${dateStr}</p>
-            <p>${location.properties.crime.description}</p>
+            <p>${timeStr}</p>
+            <p>${location.state}</p>
+            <p>
+                ${location.crime_type}
+                ${location.crime_type_parent1 && location.crime_type_parent1 !== location.crime_type ? `, ${location.crime_type_parent1}` : ''}
+                ${location.crime_type_parent2 ? `, ${location.crime_type_parent2}` : ''}
+                ${location.crime_type_parent3 ? `, ${location.crime_type_parent3}` : ''}
+            </p>
+
           </div>
         `);
             return marker;

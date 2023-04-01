@@ -6,8 +6,8 @@ const getAllData = async () => {
         '       crimes.date,\n' +
         '       r.label as "relevance",\n' +
         '       s.label as "state",\n' +
-        '       t1.label as "crime_type",\n' +
-        '       t2.label as "crime_type_parent1",\n' +
+        '      ifnull(t2.name, t1.name) as "crime_type",\n' +
+        '       t1.label as "crime_type_parent1",\n' +
         '       t3.label as "crime_type_parent2",\n' +
         '       t4.label as "crime_type_parent3"\n' +
         'FROM crimes\n' +
@@ -27,8 +27,8 @@ const getDataByDateRange = async (dateFrom, dateTo) => {
         '       crimes.date,\n' +
         '       r.label as "relevance",\n' +
         '       s.label as "state",\n' +
-        '       t1.label as "crime_type",\n' +
-        '       t2.label as "crime_type_parent1",\n' +
+        '      ifnull(t2.name, t1.name) as "crime_type",\n' +
+        '       t1.label as "crime_type_parent1",\n' +
         '       t3.label as "crime_type_parent2",\n' +
         '       t4.label as "crime_type_parent3"\n' +
         'FROM crimes\n' +

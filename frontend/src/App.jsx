@@ -13,10 +13,14 @@ export default function App() {
     const fetchData = () => {
         setError(false);
         setLoading(true);
-        axios.get("http://localhost:3000/locations")
+        const currentDate = new Date();
+        const lastWeekDate = new Date();
+        lastWeekDate.setDate(lastWeekDate.getDate() - 2);
+        axios.get(`http://localhost:3000/api/data/${lastWeekDate.toISOString()}/${currentDate.toISOString()}'`)
             .then(res => {
                 setLocations(res.data);
                 setLoading(false);
+                console.log(res.data);
             })
             .catch(err => {
                 setError(true);
@@ -24,6 +28,7 @@ export default function App() {
                 setLoading(false);
             })
     }
+
 
     useEffect(() => {
         fetchData();

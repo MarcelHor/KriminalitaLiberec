@@ -42,7 +42,7 @@ export default function RightSidebar(props) {
 
     //fetch all crimes names and init
     useEffect(() => {
-        axios.get("http://localhost:3000/crimes/names")
+        axios.get("http://localhost:3000/api/types")
             .then(res => {
                 setUniqueNames(res.data)
                 props.setSelectedMarkers(res.data);

@@ -1,8 +1,8 @@
 const pool = require('../db');
 
 const getAllTypes = async () => {
-    const rows = await pool.query('select t1.label as "crime_type",\n' +
-        '       t2.label as "crime_type_parent1",\n' +
+    const rows = await pool.query('select ifnull(t2.name, t1.name) as "crime_type",\n' +
+        '       t1.label as "crime_type_parent1",\n' +
         '       t3.label as "crime_type_parent2",\n' +
         '       t4.label as "crime_type_parent3"\n' +
         'from crime_types t1\n' +

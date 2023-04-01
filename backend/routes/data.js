@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
     res.send('Welcome to the liberec crime location data API');
 });
 
-router.get('/api/locations', async (req, res) => {
+router.get('/api/data', async (req, res) => {
     try {
         const data = await dataController.getAllData();
         res.send(data[0]);
@@ -16,7 +16,7 @@ router.get('/api/locations', async (req, res) => {
     }
 });
 
-router.get('/api/locations/:dateFrom/:dateTo', async (req, res) => {
+router.get('/api/data/:dateFrom/:dateTo', async (req, res) => {
     try {
         const data = await dataController.getDataByDateRange(req.params.dateFrom, req.params.dateTo);
         res.send(data[0]);
