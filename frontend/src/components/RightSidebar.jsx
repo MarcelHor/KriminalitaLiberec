@@ -1,4 +1,3 @@
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
 import {Pie} from 'react-chartjs-2';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker'
 import {useEffect, useState} from "react";
@@ -7,7 +6,6 @@ import select_arrow from "../assets/select_arrow.svg";
 import select_line from "../assets/select_line.svg";
 import select_multiple from "../assets/select_multiple.svg";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
 export default function RightSidebar(props) {
     const labels = Object.keys(props.count);
     const data = Object.values(props.count);

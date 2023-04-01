@@ -15,12 +15,11 @@ export default function App() {
         setLoading(true);
         const currentDate = new Date();
         const lastWeekDate = new Date();
-        lastWeekDate.setDate(lastWeekDate.getDate() - 70);
+        lastWeekDate.setDate(lastWeekDate.getDate() - 3);
         axios.get(`http://localhost:3000/api/data/${lastWeekDate.toISOString()}/${currentDate.toISOString()}'`)
             .then(res => {
                 setLocations(res.data);
                 setLoading(false);
-                console.log(res.data);
             })
             .catch(err => {
                 setError(true);
