@@ -130,7 +130,9 @@ export const mapItemClick = (map, markers, position) => {
     const count = document.createElement('span');
     count.style.marginLeft = '10px';
     count.textContent = `(${currentMarkerIndex + 1}/${markers.length})`;
-    buttonContainer.appendChild(count);
+
+    if(markers.length > 1)
+        buttonContainer.appendChild(count);
 
     // Set CSS styles to arrange the content and buttons vertically
     container.style.display = 'flex';

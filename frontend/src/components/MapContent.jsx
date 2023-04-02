@@ -20,7 +20,9 @@ export default function MapContent(props) {
         },
         iconCreateFunction: createClusterCustomIcon,
         animate: true,
+        spiderLegPolylineOptions: {opacity: 0}
     });
+
 
     // Add a listener to the markerClusterGroup to handle the cluster click event
     markerClusterGroup.on("clusterclick", (cluster) => mapItemClick(map, cluster.layer.getAllChildMarkers(), cluster.latlng));
@@ -29,9 +31,10 @@ export default function MapContent(props) {
 
     const markerLayers = locations.map(location => {
         const marker = L.marker([location.y, location.x], {
-            id: location.id, crime_type: location.crime_type, icon: createMarkerIcon
+            id: location.id, crime_type: location.crime_type, icon: createMarkerIcon(location.crime_type)
         });
         marker.on("click", (e) => mapItemClick(map, [e.target], e.latlng));
+
         return marker;
     });
 
