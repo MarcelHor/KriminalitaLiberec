@@ -4,7 +4,7 @@ import {CATEGORY_COLORS} from "./colors.js";
 export const createClusterCustomIcon = (cluster) => {
     // Get the child markers of the cluster
     const childMarkers = cluster.getAllChildMarkers();
-    if (childMarkers.length == 1) {
+    if (childMarkers.length === 1) {
         return null;
     }
 
@@ -15,7 +15,6 @@ export const createClusterCustomIcon = (cluster) => {
         return count;
     }, {});
 
-    //create doughnut chart for the leaflert cluster icon
     const canvas = document.createElement('canvas');
     canvas.width = 50;
     canvas.height = 50;
@@ -45,8 +44,7 @@ export const createClusterCustomIcon = (cluster) => {
                 duration: 0,
             }, hover: {
                 mode: null,
-            },
-            responsive: false, cutout: '80%', radius: '90%',
+            }, responsive: false, cutout: '80%', radius: '90%',
 
         }
     });
@@ -64,23 +62,18 @@ export const createClusterCustomIcon = (cluster) => {
     ctx.strokeStyle = 'rgb(255,255,255)';
     ctx.stroke();
 
-
-
     ctx.font = '14px Arial';
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-//display k if the number of crimes is greater than 10000
     if (totalCrimes > 10000) {
         ctx.fillText(`${Math.round(totalCrimes / 1000)}k`, x, y);
     } else {
         ctx.fillText(`${totalCrimes}`, x, y);
     }
-//L.divIcon is a leaflet function for creating custom icons
-    const icon = L.divIcon({
+
+    return L.divIcon({
         html: canvas, className: 'cluster-icon', iconSize: L.point(50, 50, true),
     });
-
-    return icon;
 }

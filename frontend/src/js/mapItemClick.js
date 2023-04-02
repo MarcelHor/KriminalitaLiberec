@@ -1,14 +1,12 @@
 import axios from 'axios';
 
 export const mapItemClick = (map, markers, position) => {
-    const container = document.createElement('div');
-    const contentContainer = document.createElement('div');
-    const buttonContainer = document.createElement('div');
-    const popupContent = document.createElement('div');
+    const container = document.createElement('div'), contentContainer = document.createElement('div'),
+        buttonContainer = document.createElement('div'), popupContent = document.createElement('div');
+
     container.appendChild(contentContainer);
     container.appendChild(buttonContainer);
     contentContainer.appendChild(popupContent);
-
 
     const maxPage = 100;
     let markerIds = [];
@@ -46,7 +44,6 @@ export const mapItemClick = (map, markers, position) => {
             }
             // if we are at beginning of the current data set and there is no previous data set go to the end of marker list
             else if (index < 0 && currentPage === 0) {
-                //set index with modulo
                 if (markers.length % maxPage === 0) {
                     index = maxPage - 1;
 
@@ -86,7 +83,7 @@ export const mapItemClick = (map, markers, position) => {
 
     };
     const updatePopupContent = () => {
-        if (data) { // Add this check to make sure that data is not empty
+        if (data) {
             const date = new Date(data[index].date);
             const dateStr = date.toLocaleDateString('cs-CZ', {
                 day: 'numeric', month: 'numeric', year: 'numeric',
@@ -114,7 +111,6 @@ export const mapItemClick = (map, markers, position) => {
 
     // Add buttons to button container div if there is more than one marker
     if (markers.length > 1) {
-        // Add buttons to button container div
         const prevButton = document.createElement('button');
         prevButton.textContent = 'Previous';
         prevButton.addEventListener('click', () => cycleMarkers(-1));
@@ -131,20 +127,16 @@ export const mapItemClick = (map, markers, position) => {
     count.style.marginLeft = '10px';
     count.textContent = `(${currentMarkerIndex + 1}/${markers.length})`;
 
-    if(markers.length > 1)
-        buttonContainer.appendChild(count);
+    if (markers.length > 1) buttonContainer.appendChild(count);
 
     // Set CSS styles to arrange the content and buttons vertically
     container.style.display = 'flex';
     container.style.flexDirection = 'column';
     contentContainer.style.marginBottom = '10px';
 
-
     // Fetch data for the first time
     fetchData(currentPage);
 
-
-    // Create popup with container div as content
     const popup = L.popup({
         minWidth: 200,
     })

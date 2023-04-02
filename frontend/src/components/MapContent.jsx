@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useMap} from 'react-leaflet';
 import {createClusterCustomIcon} from "../js/createClusterCustomIcon.js";
 import {mapItemClick} from "../js/mapItemClick.js";
 import markerClusterGroup from "react-leaflet-cluster";
 import {createMarkerIcon} from "../js/createMarkerIcon.js";
+
 // This component is used to add the markers to the map and handle input from the user
 export default function MapContent(props) {
     const map = useMap();
@@ -23,11 +24,9 @@ export default function MapContent(props) {
         spiderLegPolylineOptions: {opacity: 0}
     });
 
-
     // Add a listener to the markerClusterGroup to handle the cluster click event
     markerClusterGroup.on("clusterclick", (cluster) => mapItemClick(map, cluster.layer.getAllChildMarkers(), cluster.latlng));
     map.addLayer(markerClusterGroup);
-
 
     const markerLayers = locations.map(location => {
         const marker = L.marker([location.y, location.x], {

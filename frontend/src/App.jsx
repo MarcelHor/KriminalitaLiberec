@@ -3,7 +3,6 @@ import axios from "axios";
 import MapMain from "./components/MapMain.jsx";
 import Header from "./components/Header.jsx";
 
-
 export default function App() {
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,7 +14,7 @@ export default function App() {
         setLoading(true);
         const currentDate = new Date();
         const lastWeekDate = new Date();
-        lastWeekDate.setDate(lastWeekDate.getDate() - 100);
+        lastWeekDate.setDate(lastWeekDate.getDate() - 500);
         axios.get(`http://localhost:3000/api/data/${lastWeekDate.toISOString()}/${currentDate.toISOString()}'`)
             .then(res => {
                 setLocations(res.data);
@@ -27,7 +26,6 @@ export default function App() {
                 setLoading(false);
             })
     }
-
 
     useEffect(() => {
         fetchData();
