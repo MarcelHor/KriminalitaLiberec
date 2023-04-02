@@ -14,7 +14,7 @@ export default function MapContent(props) {
         showCoverageOnHover: false,
         maxClusterRadius: 200,
         zoomToBoundsOnClick: false,
-        spiderfyOnMaxZoom: true,
+        spiderfyOnMaxZoom: false,
         chunkedLoading: true,
         chunkProgress: (processed, total, elapsed) => {
             console.log(processed, total, elapsed);
