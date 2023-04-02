@@ -3,7 +3,7 @@ import {useMap} from 'react-leaflet';
 import {createClusterCustomIcon} from "../js/createClusterCustomIcon.js";
 import {mapItemClick} from "../js/mapItemClick.js";
 import markerClusterGroup from "react-leaflet-cluster";
-
+import {createMarkerIcon} from "../js/createMarkerIcon.js";
 // This component is used to add the markers to the map and handle input from the user
 export default function MapContent(props) {
     const map = useMap();
@@ -13,13 +13,13 @@ export default function MapContent(props) {
         showCoverageOnHover: false,
         maxClusterRadius: 200,
         zoomToBoundsOnClick: false,
-        singleMarkerMode: true,
-        spiderfyOnMaxZoom: false,
+        spiderfyOnMaxZoom: true,
         chunkedLoading: true,
         chunkProgress: (processed, total, elapsed) => {
             console.log(processed, total, elapsed);
         },
-        iconCreateFunction: createClusterCustomIcon
+        iconCreateFunction: createClusterCustomIcon,
+        animate: true,
     });
 
     // Add a listener to the markerClusterGroup to handle the cluster click event
@@ -28,7 +28,10 @@ export default function MapContent(props) {
 
 
     const markerLayers = locations.map(location => {
-        const marker = L.marker([location.y, location.x], {id: location.id, crime_type: location.crime_type});
+        const marker = L.marker([location.y, location.x], {
+            id: location.id, crime_type: location.crime_type, icon: createMarkerIcon
+        });
+        marker.on("click", (e) => mapItemClick(map, [e.target], e.latlng));
         return marker;
     });
 
