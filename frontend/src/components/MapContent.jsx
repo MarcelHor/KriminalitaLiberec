@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useMap} from 'react-leaflet';
-import {createClusterCustomIcon} from "../js/MapIcons.js";
+import {createClusterCustomIcon} from "../js/createClusterCustomIcon.js";
 import {mapItemClick} from "../js/mapItemClick.js";
 import markerClusterGroup from "react-leaflet-cluster";
+import {createMarkerIcon} from "../js/createMarkerIcon.js";
 
 // This component is used to add the markers to the map and handle input from the user
 export default function MapContent(props) {
@@ -11,48 +12,33 @@ export default function MapContent(props) {
     // Create a markerClusterGroup to hold the markers
     const markerClusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
-        iconCreateFunction: createClusterCustomIcon,
         maxClusterRadius: 200,
         zoomToBoundsOnClick: false,
-        singleMarkerMode: true,
+        spiderfyOnMaxZoom: true,
+        chunkedLoading: true,
+        chunkProgress: (processed, total, elapsed) => {
+            console.log(processed, total, elapsed);
+        },
+        iconCreateFunction: createClusterCustomIcon,
+        animate: true,
+        spiderLegPolylineOptions: {opacity: 0}
     });
 
     // Add a listener to the markerClusterGroup to handle the cluster click event
     markerClusterGroup.on("clusterclick", (cluster) => mapItemClick(map, cluster.layer.getAllChildMarkers(), cluster.latlng));
     map.addLayer(markerClusterGroup);
 
-
-    // Add the markers to the markerClusterGroup when the locations change or the map is loaded for the first time
-    useEffect(() => {
-        // If the map is not loaded yet, return
-        if (!markerClusterGroup) return;
-
-        // Clear the existing markers in the markerClusterGroup
-        markerClusterGroup.clearLayers();
-
-        const markerLayers = locations.map(location => {
-            const marker = L.marker([location.coordinates[1], location.coordinates[0]]);
-            const date = new Date(location.properties.date);
-            const dateStr = date.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' });
-            marker.bindPopup(`
-          <div>
-            <h1>${location.properties.crime.name}</h1>
-            <p>${dateStr}</p>
-            <p>${location.properties.crime.description}</p>
-          </div>
-        `);
-            return marker;
+    const markerLayers = locations.map(location => {
+        const marker = L.marker([location.y, location.x], {
+            id: location.id, crime_type: location.crime_type, icon: createMarkerIcon(location.crime_type)
         });
+        marker.on("click", (e) => mapItemClick(map, [e.target], e.latlng));
 
-        markerClusterGroup.addLayers(markerLayers);
-        map.closePopup();
+        return marker;
+    });
 
-        // Remove the markerClusterGroup and clear the markers when the component is unmounted
-        return () => {
-            map.removeLayer(markerClusterGroup);
-            markerClusterGroup.clearLayers();
-        };
-    }, [locations, map, markerClusterGroup]);
+    // Add the markers to the markerClusterGroup
+    markerClusterGroup.addLayers(markerLayers);
 
     return null;
 }
