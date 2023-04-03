@@ -1,5 +1,6 @@
 import {Pie} from 'react-chartjs-2';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker'
+import TimeRangePicker from '@wojtekmaj/react-timerange-picker'
 import {useEffect, useState} from "react";
 import axios from "axios";
 import select_arrow from "../assets/select_arrow.svg";
@@ -13,6 +14,20 @@ export default function RightSidebar(props) {
 
 // Get reference to EditControl component
     const editRef = props.editRef;
+
+    const [types, setTypes] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/types')
+            .then((response) => {
+                setTypes(response.data);
+                console.log(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            }
+        );
+    }, []);
 
 
     return (<div className={"w-1/4  h-[calc(100vh-80px)] p-4 overflow-y-scroll"}>
@@ -63,5 +78,41 @@ export default function RightSidebar(props) {
                 </button>
             </div>
         </div>
+
+        <div>
+            <h1 className={"text-xl"}>Filtry</h1>
+            <div className={"pt-4"}>
+                <h2 className={"text-lg"}>Čas a Datum</h2>
+                <div className={"flex space-x-2"}>
+                    <input type="checkbox" id="day" name="day" value="day"/>
+                    <label htmlFor="day">Den</label>
+
+                    <input type="checkbox" id="night" name="night" value="night"/>
+                    <label htmlFor="night">Noc</label>
+                </div>
+                <div className={""}>
+                    <DateRangePicker></DateRangePicker>
+                </div>
+                <div className={""}>
+                    <TimeRangePicker disableClock={true}></TimeRangePicker>
+                </div>
+            </div>
+            <div>
+                <h2 className={"text-lg"}>Kategorie</h2>
+                <div className={"flex space-x-2"}>
+                    <input type="checkbox" id="day" name="day" value="day"/>
+                    <label htmlFor="day">Přestupky</label>
+
+                    <input type="checkbox" id="night" name="night" value="night"/>
+                    <label htmlFor="night">Trestné činy</label>
+                </div>
+
+                <div>
+                    <h2 className={"text-lg"}>Typy</h2>
+                </div>
+
+            </div>
+        </div>
+
     </div>);
 }

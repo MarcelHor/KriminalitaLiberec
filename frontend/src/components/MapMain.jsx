@@ -5,7 +5,6 @@ import MapContent from "./MapContent.jsx";
 import {useEffect, useRef, useState} from "react";
 import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
-
 export default function MapMain(props) {
     const mapRef = useRef();
     // Get reference to EditControl component
@@ -26,8 +25,8 @@ export default function MapMain(props) {
         setCount(count);
     }, [props.locations]);
 
-    return (<div className={"flex h-full w-full"}>
 
+    return (<div className={"flex h-full w-full"}>
         <MapContainer
             bounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
             maxBounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
@@ -51,7 +50,7 @@ export default function MapMain(props) {
             <MapContent visibleMarkers={props.locations}/>
 
         </MapContainer>
-        <RightSidebar locations={props.locations}
-                      editRef={editRef} count={count}/>
+        <RightSidebar
+            editRef={editRef} count={count}/>
     </div>);
 }
