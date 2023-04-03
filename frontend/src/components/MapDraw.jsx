@@ -16,18 +16,25 @@ const MapDraw = forwardRef((props, editRef) => {
         const drawnShape = e.layer.toGeoJSON();
         const selectedClusters = [];
         const selectedMarkers = [];
-        //ERROR
         map.eachLayer((layer) => {
+            //TODO: check the if statement below
             if (layer instanceof L.MarkerCluster && booleanContains(drawnShape, layer.toGeoJSON())) {
+                //check if the cluster is already in the selectedClusters by id
+                if (selectedClusters.some(cluster => cluster.id === layer.id && cluster.getChildCount() === layer.getChildCount())) {
+                    return;
+                }
                 selectedClusters.push(layer);
-                console.log("cluster" + layer);
+
             } else if (layer instanceof L.Marker && booleanContains(drawnShape, layer.toGeoJSON())) {
-                selectedMarkers.push(layer.name);
-                console.log("marker" + layer);
+                //check if the marker is already in the selectedClusters by id and child_count and x and y
+                if (selectedMarkers.some(marker => marker.options.id === layer.options.id && marker.options.crime_type === layer.options.crime_type && marker.options.x === layer.options.x && marker.options.y === layer.options.y)) {
+                    return;
+                }
+                selectedMarkers.push(layer);
             }
         });
-        const clusterChildren = selectedClusters.flatMap(cluster => cluster.getAllChildMarkers());
 
+        const clusterChildren = selectedClusters.flatMap(cluster => cluster.getAllChildMarkers());
         const allMarkers = [...selectedMarkers, ...clusterChildren];
 
         if (allMarkers.length > 0) {
