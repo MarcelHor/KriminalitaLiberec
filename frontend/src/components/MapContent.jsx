@@ -20,7 +20,7 @@ export default function MapContent(props) {
             console.log(processed, total, elapsed);
         },
         iconCreateFunction: createClusterCustomIcon,
-        animate: true,
+        animate: false,
         spiderLegPolylineOptions: {opacity: 0}
     });
 

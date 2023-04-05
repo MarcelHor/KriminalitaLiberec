@@ -7,27 +7,92 @@ import select_arrow from "../assets/select_arrow.svg";
 import select_line from "../assets/select_line.svg";
 import select_multiple from "../assets/select_multiple.svg";
 import {CATEGORY_COLORS} from "../js/colors.js";
+import NestedTypes from "./NestedTypes.jsx";
 
 export default function RightSidebar(props) {
     const labels = Object.keys(props.count);
     const data = Object.values(props.count);
 
-// Get reference to EditControl component
+    // Get reference to EditControl component
     const editRef = props.editRef;
 
     const [types, setTypes] = useState([]);
+    const [nestedTypes, setNestedTypes] = useState([]);
 
     useEffect(() => {
         axios.get('http://localhost:3000/api/types')
             .then((response) => {
                 setTypes(response.data);
-                console.log(response.data);
             })
             .catch((error) => {
                 console.log(error);
-            }
-        );
+            });
     }, []);
+
+
+    useEffect(() => {
+        const nestedData = types.reduce((acc, cur) => {
+            let category = acc.find(item => item.name === cur.crime_type);
+            if (!category) {
+                category = {name: cur.crime_type, children: []};
+                acc.push(category);
+            }
+
+            let parent2 = null;
+            if (cur.crime_type_parent2) {
+                let parent2Name = cur.crime_type_parent2;
+                let parent1Name = cur.crime_type_parent1;
+                let existingParent2 = category.children.find(item => item.name === parent2Name);
+                if (existingParent2) {
+                    parent2 = existingParent2;
+                } else {
+                    parent2 = {name: parent2Name, children: []};
+                    category.children.push(parent2);
+                }
+
+                let parent1 = parent2.children.find(item => item.name === parent1Name);
+                if (!parent1) {
+                    parent1 = {name: parent1Name, children: []};
+                    parent2.children.push(parent1);
+                }
+
+                let parent3 = null;
+                if (cur.crime_type_parent3) {
+                    let parent3Name = cur.crime_type_parent3;
+                    parent3 = parent1.children.find(item => item.name === parent3Name);
+                    if (!parent3) {
+                        parent3 = {name: parent3Name, children: []};
+                        parent1.children.push(parent3);
+                    }
+                }
+
+                parent2 = parent3 || parent1;
+            }
+
+            if (!parent2) {
+                let parent1 = category.children.find(item => item.name === cur.crime_type_parent1);
+                if (!parent1) {
+                    parent1 = {name: cur.crime_type_parent1, children: []};
+                    category.children.push(parent1);
+                }
+
+                let parent3 = null;
+                if (cur.crime_type_parent3) {
+                    let parent3Name = cur.crime_type_parent3;
+                    parent3 = parent1.children.find(item => item.name === parent3Name);
+                    if (!parent3) {
+                        parent3 = {name: parent3Name, children: []};
+                        parent1.children.push(parent3);
+                    }
+                }
+
+                parent2 = parent3 || parent1;
+            }
+
+            return acc;
+        }, []);
+        setNestedTypes(nestedData);
+    }, [types]);
 
 
     return (<div className={"w-1/4  h-[calc(100vh-80px)] p-4 overflow-y-scroll"}>
@@ -48,7 +113,6 @@ export default function RightSidebar(props) {
                 }
 
             }}/>
-
         </div>
 
 
@@ -109,8 +173,8 @@ export default function RightSidebar(props) {
 
                 <div>
                     <h2 className={"text-lg"}>Typy</h2>
+                    {nestedTypes.map((item) => (<NestedTypes key={item.name} data={item}/>))}
                 </div>
-
             </div>
         </div>
 
