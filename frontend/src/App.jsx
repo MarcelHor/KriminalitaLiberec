@@ -14,6 +14,7 @@ export default function App() {
         setLoading(true);
         const currentDate = new Date();
         const lastWeekDate = new Date();
+        console.log(lastWeekDate);
         lastWeekDate.setDate(lastWeekDate.getDate() - 500);
         axios.get(`http://localhost:3000/api/data/${lastWeekDate.toISOString()}/${currentDate.toISOString()}`)
             .then(res => {
