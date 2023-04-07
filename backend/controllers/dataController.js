@@ -26,6 +26,7 @@ const getDataByDateRangeSkeleton = async (dateFrom, dateTo) => {
         '       crimes.id,\n' +
         'crimes.x,\n' +
         '       crimes.y,\n' +
+        '       crimes.date,\n' +
         '      ifnull(t2.name, t1.name) as "crime_type"\n' +
         'FROM crimes\n' +
         '         INNER JOIN crime_types t1 ON crimes.crime_types_id = t1.id\n' +

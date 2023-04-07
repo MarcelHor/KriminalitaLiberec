@@ -31,6 +31,9 @@ export default function RightSidebar(props) {
     const changeTime = (time) => {
         props.setTimeRange(time);
     }
+    const changeDate = (date) => {
+        props.setDateRange(date);
+    }
 
 
     return (<div className={"w-1/4  h-[calc(100vh-80px)] p-4 overflow-y-scroll"}>
@@ -52,7 +55,6 @@ export default function RightSidebar(props) {
 
             }}/>
         </div>
-
 
 
         <div>
@@ -94,10 +96,11 @@ export default function RightSidebar(props) {
                     <label htmlFor="night">Noc</label>
                 </div>
                 <div className={""}>
-                    <DateRangePicker onChange={props.setDateRange} value={props.dateRange} clearIcon={false}></DateRangePicker>
+                    <DateRangePicker onChange={changeDate} value={props.dateRange} clearIcon={null}></DateRangePicker>
                 </div>
                 <div className={""}>
-                    <TimeRangePicker onChange={changeTime} value={props.timeRange} disableClock={true} clearIcon={false}></TimeRangePicker>
+                    <TimeRangePicker onChange={changeTime} value={props.timeRange} disableClock={true}
+                                     clearIcon={null}></TimeRangePicker>
                 </div>
             </div>
             <div>

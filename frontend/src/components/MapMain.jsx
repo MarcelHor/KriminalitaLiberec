@@ -14,21 +14,33 @@ export default function MapMain(props) {
         editRef.current = ref;
     }
 
-    const [timeRange, setTimeRange] = useState([new Date(), new Date()]);
-    const [visibleMarkers, setVisibleMarkers] = useState(props.locations);
+    const [timeRange, setTimeRange] = useState(["00:00", "23:59"]);
+    const [visibleMarkers, setVisibleMarkers] = useState([]);
+
+    //filter based on time
+    useEffect(() => {
+        console.log(timeRange);
+        const visibleMarkers = props.locations.filter((marker) => {
+            const date = new Date(marker.date);
+            const time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
+            return time >= timeRange[0] && time <= timeRange[1];
+        });
+        setVisibleMarkers(visibleMarkers);
+    }, [timeRange, props.locations]);
 
 
     // State for the number of markers in each category (used for the pie chart)
     const [count, setCount] = useState({});
     // Count the number of markers in each category and update the state when the visible markers change
     useEffect(() => {
-        const count = props.locations.reduce((counts, crime) => {
+        const count = visibleMarkers.reduce((counts, crime) => {
             const crimeName = crime.crime_type;
             counts[crimeName] = (counts[crimeName] || 0) + 1;
             return counts;
         }, {});
         setCount(count);
-    }, [props.locations]);
+    }, [visibleMarkers]);
 
 
     return (<div className={"flex h-full w-full"}>
@@ -52,11 +64,11 @@ export default function MapMain(props) {
             />
             <MapDraw onMounted={(e) => onMountedRect(e)} editRef={editRef}/>
             <SearchBar/>
-            <MapContent visibleMarkers={props.locations}/>
+            <MapContent visibleMarkers={visibleMarkers}/>
 
         </MapContainer>
         <RightSidebar
-            editRef={editRef} count={count} dateRange={props.dateRange} timeRange={props.timeRange}
-            setDateRange={props.setDateRange} setTimeRange={props.setTimeRange}/>
+            editRef={editRef} count={count} dateRange={props.dateRange} timeRange={timeRange}
+            setDateRange={props.setDateRange} setTimeRange={setTimeRange}/>
     </div>);
 }
