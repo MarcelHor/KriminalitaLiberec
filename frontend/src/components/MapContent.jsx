@@ -17,7 +17,7 @@ export default function MapContent(props) {
             showCoverageOnHover: false,
             maxClusterRadius: 200,
             zoomToBoundsOnClick: false,
-            spiderfyOnMaxZoom: true,
+            spiderfyOnMaxZoom: false,
             chunkedLoading: true,
             iconCreateFunction: createClusterCustomIcon,
             animate: false,
@@ -47,8 +47,8 @@ export default function MapContent(props) {
 
             // Add the markers to the markerClusterGroup
             markerClusterGroupRef.current.addLayers(markerLayers);
-
         }
+        map.closePopup();
     }, [locations, map]);
 
     return null;

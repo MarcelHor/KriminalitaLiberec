@@ -17,14 +17,19 @@ export default function MapMain(props) {
     const [timeRange, setTimeRange] = useState(["00:00", "23:59"]);
     const [visibleMarkers, setVisibleMarkers] = useState([]);
 
-    //filter based on time
     useEffect(() => {
-        console.log(timeRange);
         const visibleMarkers = props.locations.filter((marker) => {
             const date = new Date(marker.date);
-            const time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-
-            return time >= timeRange[0] && time <= timeRange[1];
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const start = timeRange[0].split(":").map(Number);
+            const end = timeRange[1].split(":").map(Number);
+            const startTime = start[0] * 60 + start[1];
+            const endTime = end[0] * 60 + end[1];
+            const currentTime = hours * 60 + minutes;
+            const isBetween = (startTime < endTime && currentTime >= startTime && currentTime <= endTime) || // start and end time are on the same day
+                (startTime > endTime && (currentTime >= startTime || currentTime <= endTime)); // start and end time cross midnight
+            return isBetween;
         });
         setVisibleMarkers(visibleMarkers);
     }, [timeRange, props.locations]);

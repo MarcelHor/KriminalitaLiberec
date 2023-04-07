@@ -1,5 +1,6 @@
 import Chart from 'chart.js/auto';
 import {CATEGORY_COLORS} from "./colors.js";
+
 export const createClusterCustomIcon = (cluster) => {
     // Get the child markers of the cluster
     const childMarkers = cluster.getAllChildMarkers();
@@ -14,20 +15,14 @@ export const createClusterCustomIcon = (cluster) => {
         return count;
     }, {});
 
-    // Create a new canvas element for the chart
     const canvas = document.createElement('canvas');
     canvas.width = 50;
     canvas.height = 50;
 
-    // Append the new canvas to the parent element
-    const parent = document.createElement('div');
-    parent.appendChild(canvas);
-
-    const chartCanvas = document.createElement('canvas');
-    chartCanvas.width = 50;
-    chartCanvas.height = 50;
-
-    const ctx = chartCanvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
+    const totalCrimes = childMarkers.length;
+    const x = 25;
+    const y = 25;
 
     const chart = new Chart(ctx, {
         type: 'doughnut', data: {
@@ -48,46 +43,39 @@ export const createClusterCustomIcon = (cluster) => {
             }, hover: {
                 mode: null,
             }, responsive: false, cutout: '80%', radius: '90%',
-            layout: {
-                padding: {
-                    //TODO: fix zoom in?
-                    right: 10,
-                    bottom: 10,
-                }
-            },
         }
     });
 
-    // Draw the chart on the new canvas
-    canvas.getContext('2d').drawImage(chartCanvas, 0, 0);
+    // Draw circle in the middle of the chart
+    ctx.beginPath();
+    ctx.arc(x, y, 18, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgb(255,255,255)';
+    ctx.fill();
 
-    // Draw the circle and text on the original canvas
-    const x = 25;
-    const y = 25;
+    // Draw circle around the chart
+    ctx.beginPath();
+    ctx.arc(x, y, 22.5, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgb(255,255,255)';
+    ctx.stroke();
 
-    canvas.getContext('2d').beginPath();
-    canvas.getContext('2d').arc(x, y, 18, 0, 2 * Math.PI);
-    canvas.getContext('2d').fillStyle = 'rgb(255,255,255)';
-    canvas.getContext('2d').fill();
+    // Draw text for the total crimes count
+    ctx.font = '14px Arial';
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
-    canvas.getContext('2d').beginPath();
-    canvas.getContext('2d').arc(x, y, 24, 0, 2 * Math.PI);
-    canvas.getContext('2d').strokeStyle = 'rgb(255,255,255)';
-    canvas.getContext('2d').stroke();
-
-    canvas.getContext('2d').font = '14px Arial';
-    canvas.getContext('2d').fillStyle = 'black';
-    canvas.getContext('2d').textAlign = 'center';
-    canvas.getContext('2d').textBaseline = 'middle';
-
-    const totalCrimes = childMarkers.length;
     if (totalCrimes > 10000) {
-        canvas.getContext('2d').fillText(`${Math.round(totalCrimes / 1000)}k`, x, y);
+        ctx.fillText(`${Math.round(totalCrimes / 1000)}k`, x, y);
     } else {
-        canvas.getContext('2d').fillText(`${totalCrimes}`, x, y);
+        ctx.fillText(`${totalCrimes}`, x, y);
     }
 
+    // Convert the chart to an image
+    const chartImage = new Image();
+    chartImage.src = canvas.toDataURL();
+
+
     return L.divIcon({
-        html: parent, className: 'cluster-icon', iconSize: L.point(50, 50),
+        html: chartImage, className: 'cluster-icon', iconSize: L.point(50, 50, true),
     });
 };

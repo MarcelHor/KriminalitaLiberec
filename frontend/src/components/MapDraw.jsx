@@ -2,7 +2,7 @@ import {forwardRef, useEffect, useRef} from "react";
 import {FeatureGroup, useMap} from "react-leaflet";
 import {EditControl} from "react-leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw.css";
-import "../css/draw.css";
+import "../css/map.css";
 import {booleanContains} from '@turf/turf';
 import {mapItemClick} from "../js/mapItemClick.js";
 
