@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useMap} from 'react-leaflet';
 import {createClusterCustomIcon} from "../js/createClusterCustomIcon.js";
 import {mapItemClick} from "../js/mapItemClick.js";
@@ -16,9 +16,6 @@ export default function MapContent(props) {
         zoomToBoundsOnClick: false,
         spiderfyOnMaxZoom: false,
         chunkedLoading: true,
-        chunkProgress: (processed, total, elapsed) => {
-            console.log(processed, total, elapsed);
-        },
         iconCreateFunction: createClusterCustomIcon,
         animate: false,
         spiderLegPolylineOptions: {opacity: 0}
@@ -39,6 +36,5 @@ export default function MapContent(props) {
 
     // Add the markers to the markerClusterGroup
     markerClusterGroup.addLayers(markerLayers);
-
     return null;
 }

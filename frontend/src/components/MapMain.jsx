@@ -5,6 +5,7 @@ import MapContent from "./MapContent.jsx";
 import {useEffect, useRef, useState} from "react";
 import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
+
 export default function MapMain(props) {
     const mapRef = useRef();
     // Get reference to EditControl component
@@ -12,6 +13,10 @@ export default function MapMain(props) {
     const onMountedRect = (ref) => {
         editRef.current = ref;
     }
+
+    const [timeRange, setTimeRange] = useState([new Date(), new Date()]);
+    const [visibleMarkers, setVisibleMarkers] = useState(props.locations);
+
 
     // State for the number of markers in each category (used for the pie chart)
     const [count, setCount] = useState({});
@@ -51,6 +56,7 @@ export default function MapMain(props) {
 
         </MapContainer>
         <RightSidebar
-            editRef={editRef} count={count}/>
+            editRef={editRef} count={count} dateRange={props.dateRange} timeRange={props.timeRange}
+            setDateRange={props.setDateRange} setTimeRange={props.setTimeRange}/>
     </div>);
 }

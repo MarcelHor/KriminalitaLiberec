@@ -44,14 +44,13 @@ const MapDraw = forwardRef((props, editRef) => {
 
     // When the user closes the popup, remove the drawn shape
     useEffect(() => {
-        const handleChange = () => {
-            if (featureGroupRef.current.getLayers().length > 0) {
+        map.on("popupclose", () => {
+            if (featureGroupRef.current && featureGroupRef.current.getLayers().length > 0) {
                 featureGroupRef.current.removeLayer(featureGroupRef.current.getLayers()[0]);
             }
-        }
-        map.on("popupclose", handleChange);
-
+        });
     }, [map]);
+
 
     // When the user starts drawing a shape, remove the existing shape
     const onDrawStart = (e) => {
