@@ -6,13 +6,12 @@ import axios from "axios";
 import select_arrow from "../assets/select_arrow.svg";
 import select_line from "../assets/select_line.svg";
 import select_multiple from "../assets/select_multiple.svg";
-import {CATEGORY_COLORS} from "../js/colors.js";
+import {CATEGORY_COLORS, CATEGORY_NAMES} from "../js/colors.js";
 import NestedTypes from "./NestedTypes.jsx";
 
 export default function RightSidebar(props) {
     const labels = Object.keys(props.count);
     const data = Object.values(props.count);
-
     // Get reference to EditControl component
     const editRef = props.editRef;
 
@@ -36,11 +35,20 @@ export default function RightSidebar(props) {
     }
 
 
+    const handleCheckboxChange = (checked, id) => {
+        if (!checked) {
+            props.setSelected([...props.selected, id]);
+        } else {
+            props.setSelected(props.selected.filter((item) => item !== id));
+        }
+        console.log(props.selected);
+    }
+
     return (<div className={"w-1/4  h-[calc(100vh-80px)] p-4 overflow-y-scroll"}>
         <div>
             <h1 className={"text-xl"}>Graf</h1>
             <Pie data={{
-                labels: labels, datasets: [{
+                labels: labels.map((label) => CATEGORY_NAMES[label]), datasets: [{
                     data: data,
                     backgroundColor: labels.map((label) => CATEGORY_COLORS[label]),
                     borderWidth: 0,
@@ -50,9 +58,14 @@ export default function RightSidebar(props) {
                 plugins: {
                     legend: {
                         display: false
+                    }, tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return context.parsed.y;
+                            }
+                        }
                     }
                 }
-
             }}/>
         </div>
 
@@ -139,7 +152,9 @@ export default function RightSidebar(props) {
 
                 <div>
                     <h2 className={"text-lg"}>Typy</h2>
-                    {types.map((item) => (<NestedTypes key={item.name} data={item}/>))}
+                    {types.map((item) => (
+                        <NestedTypes key={item.name} data={item} handleCheckboxChange={handleCheckboxChange}
+                        />))}
                 </div>
             </div>
         </div>
