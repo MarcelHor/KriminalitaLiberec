@@ -2,7 +2,7 @@ import React from 'react';
 import right_arrow from '../assets/right_arrow.svg';
 import {CATEGORY_COLORS} from "../js/colors.js";
 
-const NestedTypes = ({data, handleCheckboxChange}) => {
+const NestedTypes = ({data, handleCheckboxChange, parentChecked}) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
     const toggleOpen = () => {
@@ -26,13 +26,13 @@ const NestedTypes = ({data, handleCheckboxChange}) => {
                 )}
                 <input
                     type="checkbox"
-                    defaultChecked={true}
+                    defaultChecked={parentChecked}
                     onChange={(e) => handleCheckboxChange(e.target.checked, data.id)}
                 />
                 {hasChildren && (
                     <span
                         className="inline-block w-4 h-4 rounded-full"
-                        style={{backgroundColor: CATEGORY_COLORS[data.name]}}
+                        style={{backgroundColor: CATEGORY_COLORS[data.id]}}
                     />
                 )}
                 <span>{data.name}</span>
@@ -42,7 +42,7 @@ const NestedTypes = ({data, handleCheckboxChange}) => {
                 <ul className="ml-14">
                     {data.children.map((child) => (
                         <li key={child.name} className="py-0.5">
-                            <NestedTypes data={child} handleCheckboxChange={handleCheckboxChange}/>
+                            <NestedTypes data={child} handleCheckboxChange={handleCheckboxChange} parentChecked={parentChecked}/>
                         </li>
                     ))}
                 </ul>

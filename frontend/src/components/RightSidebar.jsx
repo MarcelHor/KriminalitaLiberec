@@ -12,10 +12,10 @@ import NestedTypes from "./NestedTypes.jsx";
 export default function RightSidebar(props) {
     const labels = Object.keys(props.count);
     const data = Object.values(props.count);
+    const [types, setTypes] = useState([]);
+    const [states, setStates] = useState([]);
     // Get reference to EditControl component
     const editRef = props.editRef;
-
-    const [types, setTypes] = useState([]);
 
     useEffect(() => {
         axios.get('http://localhost:3000/api/types/nested')
@@ -27,6 +27,50 @@ export default function RightSidebar(props) {
             });
     }, []);
 
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/states')
+            .then((response) => {
+                setStates(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
+
+    const handleCheckboxChange = (checked, id, isParent) => {
+        if (isParent) {
+            props.setSelected((prev) => {
+                if (checked) {
+                    return prev.filter((type) => type !== id);
+                } else {
+                    return [...prev, id];
+                }
+            });
+        } else {
+            props.setSelected((prev) => {
+                if (checked) {
+                    return prev.filter((type) => type !== id);
+
+                } else {
+                    return [...prev, id];
+                }
+            });
+        }
+    };
+
+    const handleStateCheckboxChange = (event) => {
+        const id = parseInt(event.target.id)
+        props.setSelectedStates((prev) => {
+            if (event.target.checked) {
+                return prev.filter((state) => state !== id);
+
+            } else {
+                return [...prev, id];
+            }
+        });
+    };
+
     const changeTime = (time) => {
         props.setTimeRange(time);
     }
@@ -35,14 +79,6 @@ export default function RightSidebar(props) {
     }
 
 
-    const handleCheckboxChange = (checked, id) => {
-        if (!checked) {
-            props.setSelected([...props.selected, id]);
-        } else {
-            props.setSelected(props.selected.filter((item) => item !== id));
-        }
-        console.log(props.selected);
-    }
 
     return (<div className={"w-1/4  h-[calc(100vh-80px)] p-4 overflow-y-scroll"}>
         <div>
@@ -154,7 +190,18 @@ export default function RightSidebar(props) {
                     <h2 className={"text-lg"}>Typy</h2>
                     {types.map((item) => (
                         <NestedTypes key={item.name} data={item} handleCheckboxChange={handleCheckboxChange}
+                                     parentChecked={true}
                         />))}
+                </div>
+            </div>
+            <div>
+                <h2 className={"text-lg"}>Stav objasnění</h2>
+                <div className={"flex flex-col space-y-2 p-4"}>
+                    {states.map((item) => (<div key={item.id}>
+                        <input defaultChecked={true} type="checkbox" id={item.id}
+                                 onChange={handleStateCheckboxChange}/>
+                        <label>{item.label}</label>
+                    </div>))}
                 </div>
             </div>
         </div>
