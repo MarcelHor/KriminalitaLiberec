@@ -36,14 +36,20 @@ export default function MapMain(props) {
     }, [timeRange, props.locations]);
 
     useEffect(() => {
+        const selectedInt = selected.map((item) => parseInt(item));
+        console.log(selectedInt);
         const visibleMarkers = props.locations.filter((marker) => {
-            return !(selected.includes(marker.crime_type) || selected.includes(marker.crime_type_parent1) || selected.includes(marker.crime_type_parent2) || selected.includes(marker.crime_type_parent3))
+            if ( selectedInt.includes(marker.crime_type_parent1) || selectedInt.includes(marker.crime_type_parent2) || selectedInt.includes(marker.crime_type_parent3)) {
+                // Check if the marker's state is not selected
+                if (!selectedStates.includes(marker.state)) {
+                    return true;
+                }
+            }
+            return false;
         });
-        const stateFiltered = visibleMarkers.filter((marker) => {
-            return !(selectedStates.includes(marker.state))
-        });
-        setVisibleMarkers(stateFiltered);
+        setVisibleMarkers(visibleMarkers);
     }, [selected, props.locations, selectedStates]);
+
 
 
     // State for the number of markers in each category (used for the pie chart)
@@ -85,6 +91,7 @@ export default function MapMain(props) {
         </MapContainer>
         <RightSidebar
             editRef={editRef} count={count} dateRange={props.dateRange} timeRange={timeRange}
-            setDateRange={props.setDateRange} setTimeRange={setTimeRange} selected={selected} setSelected={setSelected} setSelectedStates={setSelectedStates}/>
+            setDateRange={props.setDateRange} setTimeRange={setTimeRange} selected={selected} setSelected={setSelected}
+            setSelectedStates={setSelectedStates}/>
     </div>);
 }
