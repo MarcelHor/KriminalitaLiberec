@@ -18,6 +18,8 @@ export default function MapMain(props) {
     const [visibleMarkers, setVisibleMarkers] = useState([]);
     const [selected, setSelected] = useState([]);
     const [selectedStates, setSelectedStates] = useState([]);
+    const [heatMap, setHeatMap] = useState(false);
+
     useEffect(() => {
         const visibleMarkers = props.locations.filter((marker) => {
             const date = new Date(marker.date);
@@ -37,7 +39,6 @@ export default function MapMain(props) {
 
     useEffect(() => {
         const selectedInt = selected.map((item) => parseInt(item));
-        console.log(selectedInt);
         const visibleMarkers = props.locations.filter((marker) => {
             if ( selectedInt.includes(marker.crime_type_parent1) || selectedInt.includes(marker.crime_type_parent2) || selectedInt.includes(marker.crime_type_parent3)) {
                 // Check if the marker's state is not selected
@@ -86,12 +87,12 @@ export default function MapMain(props) {
             />
             <MapDraw onMounted={(e) => onMountedRect(e)} editRef={editRef}/>
             <SearchBar/>
-            <MapContent visibleMarkers={visibleMarkers}/>
+            <MapContent visibleMarkers={visibleMarkers} heathMap={heatMap}/>
 
         </MapContainer>
         <RightSidebar
             editRef={editRef} count={count} dateRange={props.dateRange} timeRange={timeRange}
             setDateRange={props.setDateRange} setTimeRange={setTimeRange} selected={selected} setSelected={setSelected}
-            setSelectedStates={setSelectedStates}/>
+            setSelectedStates={setSelectedStates} setHeatMap={setHeatMap}/>
     </div>);
 }

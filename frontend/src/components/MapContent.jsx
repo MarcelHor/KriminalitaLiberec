@@ -4,12 +4,14 @@ import {createClusterCustomIcon} from "../js/createClusterCustomIcon.js";
 import {mapItemClick} from "../js/mapItemClick.js";
 import markerClusterGroup from "react-leaflet-cluster";
 import {createMarkerIcon} from "../js/createMarkerIcon.js";
+import 'leaflet.heat';
 
 // This component is used to add the markers to the map and handle input from the user
 export default function MapContent(props) {
     const map = useMap();
     const markerClusterGroupRef = useRef(null);
     const locations = props.visibleMarkers;
+    const isHeatmap = props.heathMap; // get the current map view from props
 
     // Initialize the markerClusterGroup on mount
     useEffect(() => {
@@ -30,9 +32,30 @@ export default function MapContent(props) {
         map.addLayer(markerClusterGroupRef.current);
     }, [map]);
 
-    // Update the markerClusterGroup whenever the visibleMarkers prop changes
+    // Update the markerClusterGroup or heatmap whenever the visibleMarkers or isHeatmap prop changes
     useEffect(() => {
-        if (markerClusterGroupRef.current) {
+        if (isHeatmap) {
+            // Remove the marker cluster group layer from the map
+            map.removeLayer(markerClusterGroupRef.current);
+
+            // Remove the existing heatmap layer from the map
+            map.eachLayer(layer => {
+                if (layer instanceof L.HeatLayer) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            // Create a new heatmap layer and add it to the map
+            const heatmapLayer = L.heatLayer(locations.map(location => [location.y, location.x]), {radius: 40, blur: 20 });
+            heatmapLayer.addTo(map);
+        } else {
+            // Remove the heatmap layer from the map
+            map.eachLayer(layer => {
+                if (layer instanceof L.HeatLayer) {
+                    map.removeLayer(layer);
+                }
+            });
+
             // Clear existing markers
             markerClusterGroupRef.current.clearLayers();
 
@@ -47,9 +70,12 @@ export default function MapContent(props) {
 
             // Add the markers to the markerClusterGroup
             markerClusterGroupRef.current.addLayers(markerLayers);
+
+            // Add the marker cluster group layer to the map
+            map.addLayer(markerClusterGroupRef.current);
         }
         map.closePopup();
-    }, [locations, map]);
+    }, [locations, isHeatmap, map]);
 
     return null;
 }

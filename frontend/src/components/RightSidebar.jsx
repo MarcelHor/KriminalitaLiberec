@@ -10,6 +10,13 @@ export default function RightSidebar(props) {
         <div>
             <SidebarChart count={props.count}/>
         </div>
+        <div>
+            <h1 className={"text-xl"}>Výběr Mapy</h1>
+            <div className={"flex flex-row"}>
+                <button className={"bg-gray-200 rounded-md p-2 m-2"} onClick={() => props.setHeatMap(false)}>Body</button>
+                <button className={"bg-gray-200 rounded-md p-2 m-2"} onClick={() => props.setHeatMap(true)}>Heatmapa</button>
+            </div>
+        </div>
 
         <div>
             <DrawControl editRef={props.editRef}/>
@@ -21,7 +28,7 @@ export default function RightSidebar(props) {
                 <TimeFilter setTimeRange={props.setTimeRange} setDateRange={props.setDateRange} timeRange={props.timeRange} dateRange={props.dateRange}/>
             </div>
 
-            <div>
+            <div className={"lowercase"}>
                 <CrimesTree setSelected={props.setSelected}/>
             </div>
 
