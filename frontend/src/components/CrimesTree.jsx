@@ -2,17 +2,31 @@ import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import React, {useEffect, useState} from 'react';
 import CheckboxTree from 'react-checkbox-tree';
 import axios from "axios";
+import rightArrow from "../assets/right_arrow.svg";
+import {CATEGORY_COLORS} from "../js/colors.js";
 
 export const CrimesTree = (props) => {
     const [checked, setChecked] = useState([]);
     const [expanded, setExpanded] = useState([]);
     const [types, setTypes] = useState([]);
 
+    const convertEmptyChildrenToObject = (nodes) => {
+        nodes.forEach((node) => {
+            if (node.children.length === 0) {
+                node.children = {};
+            } else {
+                convertEmptyChildrenToObject(node.children);
+            }
+        });
+    };
+
 
     useEffect(() => {
         axios.get('http://localhost:3000/api/types/nested')
             .then((response) => {
-                setTypes(response.data);
+                const types = response.data;
+                convertEmptyChildrenToObject(types);
+                setTypes(types);
             })
             .catch((error) => {
                 console.log(error);
@@ -55,7 +69,6 @@ export const CrimesTree = (props) => {
         }
     };
 
-
     const onExpand = (expanded) => {
         setExpanded(expanded);
     };
@@ -64,8 +77,8 @@ export const CrimesTree = (props) => {
         check: null,
         uncheck: null,
         halfCheck: null,
-        expandClose: null,
-        expandOpen: null,
+        expandClose: <img src={rightArrow} alt="expand"/>,
+        expandOpen: <img src={rightArrow} alt="expand" className={"rotate-90"}/>,
         expandAll: null,
         collapseAll: null,
         parentClose: null,
@@ -73,8 +86,23 @@ export const CrimesTree = (props) => {
         leaf: null,
     };
 
+    //get top level nodes
+    useEffect(() => {
+        const addColorToLabel = (nodes) => {
+            nodes.forEach((node) => {
+                node.label = <div className={"flex items-center justify-evenly"}><span
+                    style={{backgroundColor: CATEGORY_COLORS[node.value]}}
+                    className={"inline-block w-4 h-4 mr-2 rounded-full"}>&nbsp;
+</span><span className="inline-block max-w-xs overflow-hidden"
+             style={{ maxWidth: "10rem" }}>{node.label}</span></div>;
+            });
+
+        }
+        addColorToLabel(types);
+    }, [types]);
+
     return (<>
-        <h2 className={"text-lg"}>Typy</h2>
+        <h2 className="text-lg">Typy</h2>
         <CheckboxTree
             nodes={types}
             checked={checked}
@@ -85,7 +113,8 @@ export const CrimesTree = (props) => {
             nativeCheckboxes={true}
             icons={customIcons}
             optimisticToggle={false}
-            checkModel={'all'}
+            checkModel={"all"}
         />
     </>);
+
 };

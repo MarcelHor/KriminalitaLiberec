@@ -34,3 +34,10 @@
         opacity: 0.25;
     }
 }
+
+.react-checkbox-tree .rct-text label {
+    display: flex;
+    align-items: center;
+
+}
+

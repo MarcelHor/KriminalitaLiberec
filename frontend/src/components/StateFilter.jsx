@@ -37,6 +37,9 @@ export const StateFilter = (props) => {
 
     }, []);
 
+
+
+
     useEffect(() => {
         // set initial state of checked checkboxes to true
         setChecked(states.map((state) => state.value));
