@@ -6,15 +6,15 @@ import {SidebarChart} from "./SidebarChart.jsx";
 
 export default function RightSidebar(props) {
 
-    return (<div className={"w-1/4  h-[calc(100vh-80px)] p-4 overflow-y-scroll"}>
+    return (<div className={"h-[calc(100vh-80px)] p-4 overflow-y-scroll"}>
         <div>
             <SidebarChart count={props.count}/>
         </div>
         <div>
             <h1 className={"text-xl"}>Výběr Mapy</h1>
-            <div className={"flex flex-row"}>
-                <button className={"bg-gray-200 rounded-md p-2 m-2"} onClick={() => props.setHeatMap(false)}>Body</button>
-                <button className={"bg-gray-200 rounded-md p-2 m-2"} onClick={() => props.setHeatMap(true)}>Heatmapa</button>
+            <div className={"flex flex-row items-center justify-center space-x-4 py-4"}>
+                <button className={"bg-transparent hover:bg-blue-500 w-32 h-10 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"} onClick={() => props.setHeatMap(false)}>Body</button>
+                <button className={"bg-transparent hover:bg-blue-500 w-32 h-10 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"} onClick={() => props.setHeatMap(true)}>Heatmapa</button>
             </div>
         </div>
 

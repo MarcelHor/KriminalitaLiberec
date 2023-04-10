@@ -29,11 +29,14 @@ export const StateFilter = (props) => {
     return (<>
         <h2 className={"text-lg"}>Stav objasnění</h2>
         <div className={"flex flex-col space-y-2 p-4"}>
-            {states.map((item) => (<div key={item.id}>
-                <input defaultChecked={true} type="checkbox" id={item.id}
-                       onChange={handleStateCheckboxChange}/>
-                <label>{item.label}</label>
-            </div>))}
+            {states.map((item) => (
+                <div key={item.id}>
+                    <label htmlFor={item.id} className={"hover:bg-gray-100 p-2 "}>
+                        <input defaultChecked={true} type="checkbox" id={item.id} onChange={handleStateCheckboxChange} />
+                        {item.label}
+                    </label>
+                </div>
+            ))}
         </div>
     </>);
 }

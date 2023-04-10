@@ -26,7 +26,7 @@ export default function App() {
                 return;
             }
             setTimeout(() => {
-                fetchData(lastWeekDate, currentDate, setLocations, setLoading, setError);
+                fetchData(dateRange, setLocations, setLoading, setError);
                 setCount(fetchCount + 1);
             }, 5000);
         }
