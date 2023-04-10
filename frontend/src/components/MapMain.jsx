@@ -40,7 +40,7 @@ export default function MapMain(props) {
     useEffect(() => {
         const selectedInt = selected.map((item) => parseInt(item));
         const visibleMarkers = props.locations.filter((marker) => {
-            if ( selectedInt.includes(marker.crime_type_parent1) || selectedInt.includes(marker.crime_type_parent2) || selectedInt.includes(marker.crime_type_parent3)) {
+            if (selectedInt.includes(marker.crime_type_parent1) || selectedInt.includes(marker.crime_type_parent2) || selectedInt.includes(marker.crime_type_parent3)) {
                 // Check if the marker's state is not selected
                 if (!selectedStates.includes(marker.state)) {
                     return true;
@@ -50,7 +50,6 @@ export default function MapMain(props) {
         });
         setVisibleMarkers(visibleMarkers);
     }, [selected, props.locations, selectedStates]);
-
 
 
     // State for the number of markers in each category (used for the pie chart)
