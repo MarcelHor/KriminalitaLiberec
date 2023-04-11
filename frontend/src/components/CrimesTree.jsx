@@ -90,26 +90,29 @@ export const CrimesTree = (props) => {
     };
 
     useEffect(() => {
-        const updatedStates = types.map((node) => {
-            return {
-                ...node, label: (<div className={"flex items-center justify-between w-72"}>
+        if (Object.keys(topLevel).length > 0) {
+
+            const updatedStates = types.map((node) => {
+                return {
+                    ...node, label: (<div className={"flex items-center justify-between w-72"}>
                       <span
                           style={{backgroundColor: CATEGORY_COLORS[node.value]}}
                           className={"inline-block w-4 h-4 rounded-full"}>&nbsp;</span>
-                    <span
-                        className="inline-block max-w-xs overflow-hidden flex-1"
-                        style={{maxWidth: "10rem"}}
-                    >
+                        <span
+                            className="inline-block max-w-xs overflow-hidden flex-1"
+                            style={{maxWidth: "10rem"}}
+                        >
             {topLevel[node.value]}
           </span>
-                    <span className="inline-block w-6 text-center">
+                        <span className="inline-block w-6 text-center">
             {props.count[node.value] ? props.count[node.value] : 0}
           </span>
-                </div>),
-            };
-        });
-        setTypes(updatedStates);
-    }, [props.count]);
+                    </div>),
+                };
+            });
+            setTypes(updatedStates);
+        }
+    }, [props.count, topLevel]);
 
 
     return (<>
