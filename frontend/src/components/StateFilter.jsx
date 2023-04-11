@@ -37,20 +37,15 @@ export const StateFilter = (props) => {
                 });
                 setTopLevel(topLevel);
                 setStates(flatStates);
+
+                setChecked(flatStates.map((state) => state.value));
+                props.setSelectedStates(flatStates.map((state) => state.value));
             })
             .catch((error) => {
                 console.log(error);
             });
 
     }, []);
-
-
-
-
-    useEffect(() => {
-        // set initial state of checked checkboxes to true
-        setChecked(states.map((state) => state.value));
-    }, [states]);
 
     const handleStateCheckboxChange = (checked, targetNode) => {
         const id = targetNode.value;
@@ -65,16 +60,28 @@ export const StateFilter = (props) => {
     };
 
     useEffect(() => {
-        states.forEach((node) => {
-            node.label = <div className={"flex items-center justify-between w-72"}>
-                <span className={"inline-block w-4 h-4"}>&nbsp;</span>
-                <span className="inline-block max-w-xs overflow-hidden flex-1"
-                      style={{maxWidth: "10rem"}}>{topLevel[node.value]}</span>
-                <span className="inline-block w-6 text-center">
-                        {props.stateCount[node.value] ? props.stateCount[node.value] : 0}</span>
-            </div>;
+        const updatedStates = states.map((node) => {
+            return {
+                ...node,
+                label: (
+                    <div className={"flex items-center justify-between w-72"}>
+                        <span className={"inline-block w-4 h-4"}>&nbsp;</span>
+                        <span
+                            className="inline-block max-w-xs overflow-hidden flex-1"
+                            style={{ maxWidth: "10rem" }}
+                        >
+            {topLevel[node.value]}
+          </span>
+                        <span className="inline-block w-6 text-center">
+            {props.stateCount[node.value] ? props.stateCount[node.value] : 0}
+          </span>
+                    </div>
+                ),
+            };
         });
-    }, [states, props.stateCount]);
+        setStates(updatedStates);
+    }, [props.stateCount, topLevel]);
+
 
     return (<>
         <h2 className={"text-lg"}>Stav objasnění</h2>

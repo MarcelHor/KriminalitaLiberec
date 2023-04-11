@@ -42,7 +42,7 @@ export default function MapMain(props) {
         const visibleMarkers = props.locations.filter((marker) => {
             if (selectedInt.includes(marker.crime_type_parent1) || selectedInt.includes(marker.crime_type_parent2) || selectedInt.includes(marker.crime_type_parent3)) {
                 // Check if the marker's state is not selected
-                if (!selectedStates.includes(marker.state)) {
+                if (selectedStates.includes(marker.state)) {
                     return true;
                 }
             }
@@ -62,7 +62,7 @@ export default function MapMain(props) {
             return counts;
         }, {});
         setCount(count);
-    }, [visibleMarkers]);
+    }, [visibleMarkers, props.locations,selected]);
 
     const [stateCount, setStateCount] = useState({});
     useEffect(() => {
@@ -72,8 +72,7 @@ export default function MapMain(props) {
             return counts;
         }, {});
         setStateCount(stateCount);
-        console.log(stateCount);
-    }, [visibleMarkers]);
+    }, [visibleMarkers, props.locations,selectedStates]);
 
 
     return (<div className={"flex h-full w-full"}>

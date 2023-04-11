@@ -33,6 +33,21 @@ export const CrimesTree = (props) => {
                     topLevel[node.value] = node.label;
                 });
                 setTopLevel(topLevel);
+
+                const checked = [];
+                const traverse = (nodes) => {
+                    for (let i = 0; i < nodes.length; i++) {
+                        if (nodes[i].value) {
+                            checked.push(nodes[i].value);
+                        }
+                        if (nodes[i].children) {
+                            traverse(nodes[i].children);
+                        }
+                    }
+                }
+                traverse(types);
+                setChecked(checked);
+                props.setSelected(checked);
             })
             .catch((error) => {
                 console.log(error);
@@ -40,26 +55,7 @@ export const CrimesTree = (props) => {
     }, []);
 
 
-    useEffect(() => {
-        const checked = [];
-        const traverse = (nodes) => {
-            for (let i = 0; i < nodes.length; i++) {
-                if (nodes[i].value) {
-                    checked.push(nodes[i].value);
-                }
-                if (nodes[i].children) {
-                    traverse(nodes[i].children);
-                }
-            }
-        }
-        traverse(types);
-        setChecked(checked);
-        props.setSelected(checked);
-    }, [types]);
-
-
     const onCheck = (checked, targetNode) => {
-        console.log(targetNode);
         if (targetNode.isChild) {
             //remove itself from checked
             const index = checked.indexOf(targetNode.value);
@@ -94,18 +90,27 @@ export const CrimesTree = (props) => {
     };
 
     useEffect(() => {
-        types.forEach((node) => {
-            node.label = <div className={"flex items-center justify-between w-72"}>
-                <span
-                    style={{backgroundColor: CATEGORY_COLORS[node.value]}}
-                    className={"inline-block w-4 h-4 rounded-full"}>&nbsp;</span>
-                <span className="inline-block max-w-xs overflow-hidden flex-1"
-                      style={{maxWidth: "10rem"}}>{topLevel[node.value]}</span>
-                <span className="inline-block w-6 text-center">
-                        {props.count[node.value] ? props.count[node.value] : 0}</span>
-            </div>;
+        const updatedStates = types.map((node) => {
+            return {
+                ...node, label: (<div className={"flex items-center justify-between w-72"}>
+                      <span
+                          style={{backgroundColor: CATEGORY_COLORS[node.value]}}
+                          className={"inline-block w-4 h-4 rounded-full"}>&nbsp;</span>
+                    <span
+                        className="inline-block max-w-xs overflow-hidden flex-1"
+                        style={{maxWidth: "10rem"}}
+                    >
+            {topLevel[node.value]}
+          </span>
+                    <span className="inline-block w-6 text-center">
+            {props.count[node.value] ? props.count[node.value] : 0}
+          </span>
+                </div>),
+            };
         });
-    }, [types, props.count]);
+        setTypes(updatedStates);
+    }, [props.count]);
+
 
     return (<>
         <h2 className="text-lg">Typy</h2>
