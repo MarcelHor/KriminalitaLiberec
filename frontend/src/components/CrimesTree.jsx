@@ -9,6 +9,7 @@ export const CrimesTree = (props) => {
     const [checked, setChecked] = useState([]);
     const [expanded, setExpanded] = useState([]);
     const [types, setTypes] = useState([]);
+    const [topLevel, setTopLevel] = useState([]);
 
     const convertEmptyChildrenToObject = (nodes) => {
         nodes.forEach((node) => {
@@ -27,6 +28,11 @@ export const CrimesTree = (props) => {
                 const types = response.data;
                 convertEmptyChildrenToObject(types);
                 setTypes(types);
+                const topLevel = {};
+                types.forEach((node) => {
+                    topLevel[node.value] = node.label;
+                });
+                setTopLevel(topLevel);
             })
             .catch((error) => {
                 console.log(error);
@@ -53,6 +59,7 @@ export const CrimesTree = (props) => {
 
 
     const onCheck = (checked, targetNode) => {
+        console.log(targetNode);
         if (targetNode.isChild) {
             //remove itself from checked
             const index = checked.indexOf(targetNode.value);
@@ -86,20 +93,19 @@ export const CrimesTree = (props) => {
         leaf: null,
     };
 
-    //get top level nodes
     useEffect(() => {
-        const addColorToLabel = (nodes) => {
-            nodes.forEach((node) => {
-                node.label = <div className={"flex items-center justify-evenly"}><span
+        types.forEach((node) => {
+            node.label = <div className={"flex items-center justify-between w-72"}>
+                <span
                     style={{backgroundColor: CATEGORY_COLORS[node.value]}}
-                    className={"inline-block w-4 h-4 mr-2 rounded-full"}>&nbsp;
-</span><span className="inline-block max-w-xs overflow-hidden"
-             style={{ maxWidth: "10rem" }}>{node.label}</span></div>;
-            });
-
-        }
-        addColorToLabel(types);
-    }, [types]);
+                    className={"inline-block w-4 h-4 rounded-full"}>&nbsp;</span>
+                <span className="inline-block max-w-xs overflow-hidden flex-1"
+                      style={{maxWidth: "10rem"}}>{topLevel[node.value]}</span>
+                <span className="inline-block w-6 text-center">
+                        {props.count[node.value] ? props.count[node.value] : 0}</span>
+            </div>;
+        });
+    }, [types, props.count]);
 
     return (<>
         <h2 className="text-lg">Typy</h2>

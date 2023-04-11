@@ -6,7 +6,7 @@ import {SidebarChart} from "./SidebarChart.jsx";
 
 export default function RightSidebar(props) {
 
-    return (<div className={"h-[calc(100vh-80px)] p-4 overflow-y-scroll"}>
+    return (<div className={"h-[calc(100vh-80px)] p-4 overflow-y-scroll w-1/3"}>
         <div>
             <SidebarChart count={props.count}/>
         </div>
@@ -29,11 +29,11 @@ export default function RightSidebar(props) {
             </div>
 
             <div className={"lowercase"}>
-                <CrimesTree setSelected={props.setSelected}/>
+                <CrimesTree setSelected={props.setSelected} count={props.count}/>
             </div>
 
             <div>
-                <StateFilter setSelectedStates={props.setSelectedStates}/>
+                <StateFilter setSelectedStates={props.setSelectedStates} stateCount={props.stateCount}/>
             </div>
         </div>
     </div>);

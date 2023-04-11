@@ -64,6 +64,17 @@ export default function MapMain(props) {
         setCount(count);
     }, [visibleMarkers]);
 
+    const [stateCount, setStateCount] = useState({});
+    useEffect(() => {
+        const stateCount = visibleMarkers.reduce((counts, crime) => {
+            const stateName = crime.state;
+            counts[stateName] = (counts[stateName] || 0) + 1;
+            return counts;
+        }, {});
+        setStateCount(stateCount);
+        console.log(stateCount);
+    }, [visibleMarkers]);
+
 
     return (<div className={"flex h-full w-full"}>
         <MapContainer
@@ -92,6 +103,6 @@ export default function MapMain(props) {
         <RightSidebar
             editRef={editRef} count={count} dateRange={props.dateRange} timeRange={timeRange}
             setDateRange={props.setDateRange} setTimeRange={setTimeRange} selected={selected} setSelected={setSelected}
-            setSelectedStates={setSelectedStates} setHeatMap={setHeatMap}/>
+            setSelectedStates={setSelectedStates} setHeatMap={setHeatMap} stateCount={stateCount}/>
     </div>);
 }
