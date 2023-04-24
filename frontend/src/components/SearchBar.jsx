@@ -21,7 +21,7 @@ function SearchBar(){
     const searchControl = new SearchControl({
         provider: provider,
         style: 'button',
-        position: 'topright',
+        position: 'topleft',
         retainZoomLevel: false,
         animateZoom: true,
         keepResult: true,

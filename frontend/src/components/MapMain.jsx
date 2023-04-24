@@ -20,6 +20,7 @@ export default function MapMain(props) {
     const [selectedStates, setSelectedStates] = useState([]);
     const [heatMap, setHeatMap] = useState(false);
 
+
     useEffect(() => {
         const visibleMarkers = props.locations.filter((marker) => {
             const date = new Date(marker.date);
@@ -62,7 +63,7 @@ export default function MapMain(props) {
             return counts;
         }, {});
         setCount(count);
-    }, [visibleMarkers, props.locations,selected]);
+    }, [visibleMarkers, props.locations, selected]);
 
     const [stateCount, setStateCount] = useState({});
     useEffect(() => {
@@ -72,10 +73,10 @@ export default function MapMain(props) {
             return counts;
         }, {});
         setStateCount(stateCount);
-    }, [visibleMarkers, props.locations,selectedStates]);
+    }, [visibleMarkers, props.locations, selectedStates]);
 
 
-    return (<div className={"flex h-full w-full"}>
+    return (<div className={"flex"}>
         <MapContainer
             bounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
             maxBounds={[[50.6275, 14.9393], [50.8866, 15.2138]]}
@@ -85,7 +86,7 @@ export default function MapMain(props) {
             zoomControl={true}
             center={[50.7572, 15.0560]}
             scrollWheelZoom={true}
-            className={" h-[calc(100vh-80px)] w-full z-0"}
+            className={`h-[calc(100vh-80px)] w-full z-0`}
             ref={mapRef}
         >
 
@@ -99,9 +100,12 @@ export default function MapMain(props) {
             <MapContent visibleMarkers={visibleMarkers} heathMap={heatMap}/>
 
         </MapContainer>
+
+
         <RightSidebar
             editRef={editRef} count={count} dateRange={props.dateRange} timeRange={timeRange}
             setDateRange={props.setDateRange} setTimeRange={setTimeRange} selected={selected} setSelected={setSelected}
-            setSelectedStates={setSelectedStates} setHeatMap={setHeatMap} stateCount={stateCount}/>
+            setSelectedStates={setSelectedStates} setHeatMap={setHeatMap} stateCount={stateCount}
+        />
     </div>);
 }
