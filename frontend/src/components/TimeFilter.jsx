@@ -1,5 +1,7 @@
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import DateRangePicker from "@wojtekmaj/react-daterange-picker";
+import 'react-date-picker/dist/DatePicker.css';
+import 'react-calendar/dist/Calendar.css';
 
 export const TimeFilter = (props) => {
     const changeTime = (time) => {

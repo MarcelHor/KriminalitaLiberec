@@ -20,7 +20,7 @@ export const mapItemClick = (map, markers, position) => {
         const start = page * maxPage;
         const end = start + maxPage;
         const ids = markerIds.slice(start, end);
-        axios.get(`http://localhost:3000/api/data/${ids}`)
+        axios.get(`http://localhost:3000/api/locations/${ids}`)
             .then((response) => {
                 data = response.data;
                 updatePopupContent();

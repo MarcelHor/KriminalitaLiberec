@@ -1,10 +1,10 @@
-const pool= require('../db');
+const statesRepository = require('../repositories/statesRepository');
 
-const getAllStates = async () => {
-    const rows = await pool.query('select * from states');
-    return rows[0];
-}
-
-module.exports = {
-    getAllStates
+exports.getAllStates = async (req, res) => {
+    try {
+        const states = await statesRepository.getAllStates();
+        res.status(200).json(states[0]);
+    } catch (err) {
+        res.status(500).json('Server Error');
+    }
 }

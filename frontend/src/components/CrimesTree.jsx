@@ -56,13 +56,14 @@ export const CrimesTree = (props) => {
 
 
     const onCheck = (checked, targetNode) => {
+        console.log(targetNode);
         if (targetNode.isChild) {
-            //remove itself from checked
+            // remove itself from checked
             const index = checked.indexOf(targetNode.value);
             if (index > -1) {
                 checked.splice(index, 1);
             }
-            //add parent to checked
+            // add parent to checked
             checked.push(targetNode.parent.value);
             props.setSelected(checked);
             setChecked(checked);
@@ -70,7 +71,12 @@ export const CrimesTree = (props) => {
             setChecked(checked);
             props.setSelected(checked);
         }
+        else if(!targetNode.isChild && !targetNode.isParent ){
+            setChecked(checked);
+            props.setSelected(checked);
+        }
     };
+
 
     const onExpand = (expanded) => {
         setExpanded(expanded);
