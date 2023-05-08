@@ -103,7 +103,7 @@ export const CrimesTree = (props) => {
                     ...node, label: (<div className={"flex items-center justify-between w-72"}>
                       <span
                           style={{backgroundColor: CATEGORY_COLORS[node.value]}}
-                          className={"inline-block w-4 h-4 rounded-full"}>&nbsp;</span>
+                          className={"inline-block w-4 h-4 ml-4 rounded-full"}>&nbsp;</span>
                         <span
                             className="inline-block max-w-xs overflow-hidden flex-1"
                             style={{maxWidth: "10rem"}}

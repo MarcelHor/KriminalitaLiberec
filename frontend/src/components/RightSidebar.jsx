@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 
 export default function RightSidebar(props) {
 
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
 

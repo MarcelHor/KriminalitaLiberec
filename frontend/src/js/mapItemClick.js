@@ -1,4 +1,8 @@
 import axios from 'axios';
+import calendar from '../assets/calendar.svg';
+import clock from '../assets/clock.svg';
+import {CATEGORY_COLORS, CATEGORY_NAMES} from './colors';
+import rightArrow from '../assets/right_arrow.svg';
 
 export const mapItemClick = (map, markers, position) => {
     const container = document.createElement('div'), contentContainer = document.createElement('div'),
@@ -91,18 +95,35 @@ export const mapItemClick = (map, markers, position) => {
             const timeStr = date.toLocaleTimeString('cs-CZ', {
                 hour: 'numeric', minute: 'numeric',
             });
+
+            const categoryIds = Object.keys(CATEGORY_NAMES);
+            const categoryId = categoryIds.find(id => CATEGORY_NAMES[id] === data[index].crime_type);
+            const categoryColor = CATEGORY_COLORS[categoryId];
             popupContent.innerHTML = `
-            <div>
-                <h1>${data[index].crime_type}</h1>
-                <p>${dateStr}</p>
-                <p>${timeStr}</p>
-                <p>${data[index].state}</p>
-                <p>
-                    ${data[index].crime_type}
-                    ${data[index].crime_type_parent1 && data[index].crime_type_parent1 !== data[index].crime_type ? `, ${data[index].crime_type_parent1}` : ''}
-                    ${data[index].crime_type_parent2 ? `, ${data[index].crime_type_parent2}` : ''}
-                    ${data[index].crime_type_parent3 ? `, ${data[index].crime_type_parent3}` : ''}
-                </p>
+            <div class="text-center h-60">
+                <h1 class="capitalize border-b-4 text-center p-2" style="border-color: ${categoryColor};"> ${data[index].crime_type}</h1>
+                <div class="flex justify-between">
+                     <div class="flex items-center">
+                        <img src="${calendar}" alt="calendar" style="width: 20px; height: 20px; margin-right: 5px;">
+                        <p>${dateStr}</p>
+                    </div>
+                    <div class="flex items-center">
+                        <img src="${clock}" alt="clock" style="width: 20px; height: 20px; margin-right: 5px;">
+                        <p>${timeStr}</p>  
+                    </div>
+                </div>
+                <div> 
+                    <h2 class="font-bold"> Stav objasnění:</h2>
+                    <p>${data[index].state}</p>           
+                </div>
+                <div>
+                    <h2 class="font-bold">Třídy</h2>
+                    <div class="lowercase">
+                      <p> ${data[index].crime_type_parent1 && data[index].crime_type_parent1 !== data[index].crime_type ? `${data[index].crime_type_parent1}` : ''}
+                       ${data[index].crime_type_parent2 ? `, ${data[index].crime_type_parent2}` : ''}
+                        ${data[index].crime_type_parent3 ? `, ${data[index].crime_type_parent3}` : ''}</p>
+                    </div>
+                </div>
             </div>
         `;
             count.textContent = `(${currentMarkerIndex + 1}/${markers.length})`;
@@ -112,27 +133,37 @@ export const mapItemClick = (map, markers, position) => {
     // Add buttons to button container div if there is more than one marker
     if (markers.length > 1) {
         const prevButton = document.createElement('button');
-        prevButton.textContent = 'Previous';
+        prevButton.innerHTML = `<img src="${rightArrow}" alt="previous" style="width: 24px; height: 24px; rotate: 180deg;" class="rounded-full hover:bg-gray-200">`;
         prevButton.addEventListener('click', () => cycleMarkers(-1));
         buttonContainer.appendChild(prevButton);
         prevButton.style.marginRight = '10px';
 
         const nextButton = document.createElement('button');
-        nextButton.textContent = 'Next';
+        nextButton.innerHTML = `<img src="${rightArrow}" alt="next" style="width: 24px; height: 24px;" class="rounded-full hover:bg-gray-200">`;
         nextButton.addEventListener('click', () => cycleMarkers(1));
         buttonContainer.appendChild(nextButton);
     }
 
     const count = document.createElement('span');
-    count.style.marginLeft = '10px';
+    count.style.marginLeft = '64px';
     count.textContent = `(${currentMarkerIndex + 1}/${markers.length})`;
 
     if (markers.length > 1) buttonContainer.appendChild(count);
 
+    container.animate([{transform: 'translateY(10px)', opacity: 0}, {transform: 'translateY(0px)', opacity: 1}], {
+        duration: 200, easing: 'ease-in-out', fill: 'forwards'
+    });
+
     // Set CSS styles to arrange the content and buttons vertically
     container.style.display = 'flex';
     container.style.flexDirection = 'column';
-    contentContainer.style.marginBottom = '10px';
+    container.marginLeft = '100px';
+
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.justifyContent = 'center';
+    buttonContainer.style.alignItems = 'center';
+    buttonContainer.style.marginTop = '20px';
+
 
     // Fetch data for the first time
     fetchData(currentPage);

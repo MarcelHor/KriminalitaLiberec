@@ -27,6 +27,7 @@ function SearchBar(){
         keepResult: true,
         autoClose: true,
         searchLabel: 'Zadejte adresu',
+        showMarker: false,
     });
     useEffect(() => {
         map.addControl(searchControl);
