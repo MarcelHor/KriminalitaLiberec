@@ -122,19 +122,21 @@ export const CrimesTree = (props) => {
 
 
     return (<>
-        <h2 className="text-lg">Typy</h2>
-        <CheckboxTree
-            nodes={types}
-            checked={checked}
-            expanded={expanded}
-            onCheck={onCheck}
-            onExpand={onExpand}
-            showNodeIcon={false}
-            nativeCheckboxes={true}
-            icons={customIcons}
-            optimisticToggle={false}
-            checkModel={"all"}
-        />
+        <h2 className="text-lg mb-2">Typy</h2>
+        <div className={"lowercase"}>
+            <CheckboxTree
+                nodes={types}
+                checked={checked}
+                expanded={expanded}
+                onCheck={onCheck}
+                onExpand={onExpand}
+                showNodeIcon={false}
+                nativeCheckboxes={true}
+                icons={customIcons}
+                optimisticToggle={false}
+                checkModel={"all"}
+            />
+        </div>
     </>);
 
 };

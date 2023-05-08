@@ -21,7 +21,7 @@ export default function Header() {
         <div className="flex items-center w-full md:w-auto justify-between">
             <a href="/" className="flex items-center">
                 <img src={logo_s2} alt="logo" className="h-16 mr-2"/>
-                <h1 className="text-2xl font-bold">MAPA KRIMINALITY LIBEREC</h1>
+                <h1 className="sm:text-2xl font-bold">MAPA KRIMINALITY LIBEREC</h1>
             </a>
             <button
                 className="block md:hidden focus:outline-none"

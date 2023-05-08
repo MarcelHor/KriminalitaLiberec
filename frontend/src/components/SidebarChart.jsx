@@ -8,7 +8,6 @@ export const SidebarChart = (props) => {
 
 
     return (<>
-        <h1 className={"text-xl"}>Graf</h1>
         <div className={"h-64 flex justify-center items-center"}>
             <Pie data={{
                 labels: labels.map((label) => CATEGORY_NAMES[label]), datasets: [{

@@ -1,7 +1,8 @@
-import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
-import DateRangePicker from "@wojtekmaj/react-daterange-picker";
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
+import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
+import DateRangePicker from "@wojtekmaj/react-daterange-picker";
+
 
 export const TimeFilter = (props) => {
     const changeTime = (time) => {
@@ -12,43 +13,88 @@ export const TimeFilter = (props) => {
     }
 
     return (<>
-        <h2 className={"text-lg"}>Čas a Datum</h2>
-        <div className={"flex space-x-2 items-center justify-center py-2"}>
-            <button className={"bg-transparent hover:bg-blue-500 w-32 h-10 text-blue-700 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"} onClick={() => {
+        <h2 className={"text-lg mb-2"}>Čas</h2>
+        <div className={"flex items-center justify-center"}>
+            <TimeRangePicker onChange={changeTime} className={"w-full"} value={props.timeRange} disableClock={true}
+                             clearIcon={null}/>
+            </div>
+        <div className="inline-flex mb-4 mt-2">
+            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l w-28"
+                    onClick={() => {
                 props.setTimeRange(["00:00", "23:59"]);
             }}><span>Celý den</span></button>
-            <button className={"bg-transparent hover:bg-blue-500 w-32 h-10 text-blue-700 font-semibold hover:text-white py-2 px-2 border border-blue-500 hover:border-transparent rounded"} onClick={() => {
+            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4  w-28"
+                    onClick={() => {
                 props.setTimeRange(["20:00", "06:00"]);
             }}><span>Noc</span></button>
 
-            <button className={"bg-transparent hover:bg-blue-500 w-32 h-10  text-blue-700 font-semibold hover:text-white  px-2 border border-blue-500 hover:border-transparent rounded"} onClick={() => {
+            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r w-28"
+                    onClick={() => {
                 props.setTimeRange(["06:00", "20:00"]);
             }}><span>Den</span></button>
         </div>
-        <div className={"flex items-center justify-center"}>
-            <TimeRangePicker onChange={changeTime} className={"w-full"} value={props.timeRange} disableClock={true}
-                             clearIcon={null}></TimeRangePicker>
-        </div>
         <div className={""}>
-            <h2 className={"text-lg"}>Datum</h2>
-            <div className={"flex space-x-2 py-2 items-center justify-center"}>
-                <button className={"bg-transparent hover:bg-blue-500 w-18 h-10 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"} onClick={() => {
-                    props.setDateRange([new Date(), new Date()]);
-                }}><span>Dnes</span></button>
-
-                <button className={"bg-transparent hover:bg-blue-500 w-18 h-10 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"} onClick={() => {
-                    props.setDateRange([new Date(new Date().setDate(new Date().getDate() - 7)), new Date()]);
-                }}><span>Týden</span></button>
-
-                <button className={"bg-transparent hover:bg-blue-500 w-18 h-10 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"} onClick={() => {
-                    props.setDateRange([new Date(new Date().setDate(new Date().getDate() - 30)), new Date()]);
-                }}><span>Měsíc</span></button>
-
-                <button className={"bg-transparent hover:bg-blue-500 w-18 h-10 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"} onClick={() => {
-                    props.setDateRange([new Date(new Date().setDate(new Date().getDate() - 365)), new Date()]);
-                }}><span>Rok</span></button>
+            <h2 className={"text-lg mb-2"}>Datum</h2>
+            <div className="w-full">
+                <DateRangePicker
+                    onChange={changeDate}
+                    value={props.dateRange}
+                    clearIcon={null}
+                    className={"w-full"}
+                    openCalendarOnFocus={false}
+                />
+                <div className="flex w-full mt-2">
+                    <div className="flex-1">
+                        <button
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 w-full rounded-l"
+                            onClick={() => {
+                                props.setDateRange([new Date(), new Date()]);
+                            }}
+                        >
+                            <span>Dnes</span>
+                        </button>
+                    </div>
+                    <div className="flex-1">
+                        <button
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 w-full"
+                            onClick={() => {
+                                props.setDateRange([
+                                    new Date(new Date().setDate(new Date().getDate() - 7)),
+                                    new Date(),
+                                ]);
+                            }}
+                        >
+                            <span>Týden</span>
+                        </button>
+                    </div>
+                    <div className="flex-1">
+                        <button
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 w-full"
+                            onClick={() => {
+                                props.setDateRange([
+                                    new Date(new Date().setDate(new Date().getDate() - 30)),
+                                    new Date(),
+                                ]);
+                            }}
+                        >
+                            <span>Měsíc</span>
+                        </button>
+                    </div>
+                    <div className="flex-1">
+                        <button
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 w-full rounded-r"
+                            onClick={() => {
+                                props.setDateRange([
+                                    new Date(new Date().setDate(new Date().getDate() - 365)),
+                                    new Date(),
+                                ]);
+                            }}
+                        >
+                            <span>Rok</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <DateRangePicker onChange={changeDate} value={props.dateRange} clearIcon={null} className={"w-full"}></DateRangePicker>
         </div>
     </>);
 
