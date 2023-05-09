@@ -33,7 +33,6 @@ export const CrimesTree = (props) => {
                     topLevel[node.value] = node.label;
                 });
                 setTopLevel(topLevel);
-
                 const checked = [];
                 const traverse = (nodes) => {
                     for (let i = 0; i < nodes.length; i++) {
@@ -46,6 +45,7 @@ export const CrimesTree = (props) => {
                     }
                 }
                 traverse(types);
+                console.log(types);
                 setChecked(checked);
                 props.setSelected(checked);
             })
@@ -56,7 +56,7 @@ export const CrimesTree = (props) => {
 
 
     const onCheck = (checked, targetNode) => {
-        console.log(targetNode);
+        console.log(checked);
         if (targetNode.isChild) {
             // remove itself from checked
             const index = checked.indexOf(targetNode.value);
@@ -70,8 +70,7 @@ export const CrimesTree = (props) => {
         } else if (targetNode.isParent) {
             setChecked(checked);
             props.setSelected(checked);
-        }
-        else if(!targetNode.isChild && !targetNode.isParent ){
+        } else if (!targetNode.isChild && !targetNode.isParent) {
             setChecked(checked);
             props.setSelected(checked);
         }
@@ -100,11 +99,13 @@ export const CrimesTree = (props) => {
 
             const updatedStates = types.map((node) => {
                 return {
-                    ...node, label: (
-                        <div className={"flex items-center justify-between p-1 w-72 border-b border-gray-200"}>
-                            <span className="inline-block overflow-hidden flex-1" style={{maxWidth: "10rem"}}>{topLevel[node.value]}</span>
-                            <span className="inline-block border-b-2" style={{borderColor:CATEGORY_COLORS[node.value]}} >{props.count[node.value] ? props.count[node.value] : 0}</span>
-                        </div>),
+                    ...node,
+                    label: (<div className={"flex items-center justify-between p-1 w-72 border-b border-gray-200"}>
+                            <span className="inline-block overflow-hidden flex-1"
+                                  style={{maxWidth: "10rem"}}>{topLevel[node.value]}</span>
+                        <span className="inline-block border-b-2"
+                              style={{borderColor: CATEGORY_COLORS[node.value]}}>{props.count[node.value] ? props.count[node.value] : 0}</span>
+                    </div>),
                 };
             });
             setTypes(updatedStates);

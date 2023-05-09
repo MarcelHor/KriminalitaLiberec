@@ -17,21 +17,27 @@ export const TimeFilter = (props) => {
         <div className={"flex items-center justify-center"}>
             <TimeRangePicker onChange={changeTime} className={"w-full"} value={props.timeRange} disableClock={true}
                              clearIcon={null}/>
+        </div>
+        <div className="flex w-full mt-2">
+            <div className="flex-1">
+                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 rounded-l w-full"
+                        onClick={() => {
+                            props.setTimeRange(["00:00", "23:59"]);
+                        }}><span>Celý den</span></button>
             </div>
-        <div className="inline-flex mb-4 mt-2">
-            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l w-28"
-                    onClick={() => {
-                props.setTimeRange(["00:00", "23:59"]);
-            }}><span>Celý den</span></button>
-            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4  w-28"
-                    onClick={() => {
-                props.setTimeRange(["20:00", "06:00"]);
-            }}><span>Noc</span></button>
+            <div className="flex-1">
+                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 w-full"
+                        onClick={() => {
+                            props.setTimeRange(["20:00", "06:00"]);
+                        }}><span>Noc</span></button>
+            </div>
 
-            <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r w-28"
-                    onClick={() => {
-                props.setTimeRange(["06:00", "20:00"]);
-            }}><span>Den</span></button>
+            <div className="flex-1">
+                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r w-full"
+                        onClick={() => {
+                            props.setTimeRange(["06:00", "20:00"]);
+                        }}><span>Den</span></button>
+            </div>
         </div>
         <div className={""}>
             <h2 className={"text-lg mb-2"}>Datum</h2>
@@ -58,10 +64,7 @@ export const TimeFilter = (props) => {
                         <button
                             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 w-full"
                             onClick={() => {
-                                props.setDateRange([
-                                    new Date(new Date().setDate(new Date().getDate() - 7)),
-                                    new Date(),
-                                ]);
+                                props.setDateRange([new Date(new Date().setDate(new Date().getDate() - 7)), new Date(),]);
                             }}
                         >
                             <span>Týden</span>
@@ -71,10 +74,7 @@ export const TimeFilter = (props) => {
                         <button
                             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 w-full"
                             onClick={() => {
-                                props.setDateRange([
-                                    new Date(new Date().setDate(new Date().getDate() - 30)),
-                                    new Date(),
-                                ]);
+                                props.setDateRange([new Date(new Date().setDate(new Date().getDate() - 30)), new Date(),]);
                             }}
                         >
                             <span>Měsíc</span>
@@ -84,10 +84,7 @@ export const TimeFilter = (props) => {
                         <button
                             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 w-full rounded-r"
                             onClick={() => {
-                                props.setDateRange([
-                                    new Date(new Date().setDate(new Date().getDate() - 365)),
-                                    new Date(),
-                                ]);
+                                props.setDateRange([new Date(new Date().setDate(new Date().getDate() - 365)), new Date(),]);
                             }}
                         >
                             <span>Rok</span>
