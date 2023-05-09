@@ -10,7 +10,6 @@ export default function App() {
     const [error, setError] = useState(false);
     const [fetchCount, setCount] = useState(0);
 
-    const currentDate = new Date();
     const lastWeekDate = new Date();
     lastWeekDate.setDate(lastWeekDate.getDate() - 14);
     const [dateRange, setDateRange] = useState([lastWeekDate, new Date()]);

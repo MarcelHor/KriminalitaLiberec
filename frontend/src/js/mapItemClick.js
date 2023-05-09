@@ -1,7 +1,7 @@
 import axios from 'axios';
 import calendar from '../assets/calendar.svg';
 import clock from '../assets/clock.svg';
-import {CATEGORY_COLORS, CATEGORY_NAMES} from './colors';
+import {CATEGORY_COLORS, CATEGORY_NAMES, findParent} from './colors';
 import rightArrow from '../assets/right_arrow.svg';
 
 export const mapItemClick = (map, markers, position) => {
@@ -96,12 +96,13 @@ export const mapItemClick = (map, markers, position) => {
                 hour: 'numeric', minute: 'numeric',
             });
 
-            const categoryIds = Object.keys(CATEGORY_NAMES);
-            const categoryId = categoryIds.find(id => CATEGORY_NAMES[id] === data[index].crime_type);
-            const categoryColor = CATEGORY_COLORS[categoryId];
+            console.log(data[index]);
+            const crime_parent = findParent(data[index].crime_type_id, data[index].crime_type_id2);
+            const categoryColor = CATEGORY_COLORS[crime_parent];
+            const crime_parent_name = CATEGORY_NAMES[crime_parent];
             popupContent.innerHTML = `
             <div class="text-center h-60">
-                <h1 class="capitalize border-b-4 text-center p-2" style="border-color: ${categoryColor};"> ${data[index].crime_type}</h1>
+                <h1 class="lowercase first-letter:uppercase border-b-4 text-center p-2" style="border-color: ${categoryColor};"> ${crime_parent_name}</h1>
                 <div class="flex justify-between">
                      <div class="flex items-center">
                         <img src="${calendar}" alt="calendar" style="width: 20px; height: 20px; margin-right: 5px;">
@@ -113,15 +114,17 @@ export const mapItemClick = (map, markers, position) => {
                     </div>
                 </div>
                 <div> 
-                    <h2 class="font-bold"> Stav objasnění:</h2>
+                    <h2 class="font-bold "> Stav objasnění:</h2>
                     <p>${data[index].state}</p>           
                 </div>
                 <div>
-                    <h2 class="font-bold">Třídy</h2>
-                    <div class="lowercase">
-                      <p> ${data[index].crime_type_parent1 && data[index].crime_type_parent1 !== data[index].crime_type ? `${data[index].crime_type_parent1}` : ''}
-                       ${data[index].crime_type_parent2 ? `, ${data[index].crime_type_parent2}` : ''}
-                        ${data[index].crime_type_parent3 ? `, ${data[index].crime_type_parent3}` : ''}</p>
+${data[index].crime_type_parent1 && data[index].crime_type_parent1 != crime_parent_name ?
+                `<h2 class="font-bold ">Třídy</h2>` : ''}      
+              <div class="lowercase">
+                        ${data[index].crime_type_parent1 && data[index].crime_type_parent1 != crime_parent_name ? `${data[index].crime_type_parent1}` : ''}
+                        ${data[index].crime_type_parent2 && data[index].crime_type_parent2 != crime_parent_name ? `, ${data[index].crime_type_parent2}` : ''}
+                        ${data[index].crime_type_parent3 ? `, ${data[index].crime_type_parent3}` : ''}
+                        ${data[index].crime_type_parent4 ? `, ${data[index].crime_type_parent4}` : ''}</p>
                     </div>
                 </div>
             </div>

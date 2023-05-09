@@ -5,6 +5,7 @@ import MapContent from "./MapContent.jsx";
 import {useEffect, useRef, useState} from "react";
 import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
+import {findParent} from "../js/colors.js";
 
 export default function MapMain(props) {
     const mapRef = useRef();
@@ -58,7 +59,7 @@ export default function MapMain(props) {
     // Count the number of markers in each category and update the state when the visible markers change
     useEffect(() => {
         const count = visibleMarkers.reduce((counts, crime) => {
-            const crimeName = crime.crime_type;
+            const crimeName = findParent(crime.crime_type_parent1, crime.crime_type_parent2);
             counts[crimeName] = (counts[crimeName] || 0) + 1;
             return counts;
         }, {});

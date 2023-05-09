@@ -14,16 +14,23 @@ export const CATEGORY_COLORS = {
 };
 
 export const CATEGORY_NAMES = {
-       1:"Násilná",
+       1:"NÁSILNÁ TRESTNÁ ČINNOST",
         97:"Přestupky",
-        13:"Požáry výbuchy",
-        35:"Krádeže",
-        18:"Krádeže vloupáním",
-        55:"Jiná majetková",
-        63:"Obecně nebezpečná",
-        80:"Toxikománie",
-        84:"Zbraně",
-        96:"Extremismus",
-        54:"Podvody",
-        79:"Dopravní nehody",
+        13:"POŽÁRY VÝBUCHY ŽIVELNÉ POHROMY",
+        35:"KRÁDEŽE",
+        18:"KRÁDEŽE VLOUPÁNÍM",
+        55:"OSTATNÍ MAJETKOVÁ TRESTNÁ ČINNOST",
+        63:"OBECNĚ NEBEZPEČNÁ TRESTNÁ ČINNOST",
+        80:"TOXIKOMÁNIE",
+        84:"TRESTNÁ ČINNOST SE ZBRANÍ",
+        96:"EXTREMISMUS",
+        54:"PODVODY",
+        79:"DOPRAVNÍ NEHODY",
 };
+
+export const findParent = (id1, id2)=>{
+    //check if id1 or id2 is in the category names if so return its id
+    if (CATEGORY_NAMES[id1] || CATEGORY_NAMES[id2]){
+        return CATEGORY_NAMES[id1] ? id1 : id2;
+    }
+}

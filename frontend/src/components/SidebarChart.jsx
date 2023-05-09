@@ -10,7 +10,7 @@ export const SidebarChart = (props) => {
     return (<>
         <div className={"h-64 flex justify-center items-center"}>
             <Pie data={{
-                labels: labels.map((label) => CATEGORY_NAMES[label]), datasets: [{
+                labels: labels.map((label) => CATEGORY_NAMES[label].toLowerCase()), datasets: [{
                     data: data,
                     backgroundColor: labels.map((label) => CATEGORY_COLORS[label]),
                     borderWidth: 0,

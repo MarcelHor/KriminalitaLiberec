@@ -4,6 +4,7 @@ import {createClusterCustomIcon} from "../js/createClusterCustomIcon.js";
 import {mapItemClick} from "../js/mapItemClick.js";
 import markerClusterGroup from "react-leaflet-cluster";
 import {createMarkerIcon} from "../js/createMarkerIcon.js";
+import {findParent} from "../js/colors.js";
 import 'leaflet.heat';
 
 // This component is used to add the markers to the map and handle input from the user
@@ -23,7 +24,6 @@ export default function MapContent(props) {
             chunkedLoading: true,
             iconCreateFunction: createClusterCustomIcon,
             animate: false,
-            spiderLegPolylineOptions: {opacity: 0}
         });
 
         // Add a listener to the markerClusterGroup to handle the cluster click event
@@ -61,7 +61,7 @@ export default function MapContent(props) {
 
             const markerLayers = locations.map(location => {
                 const marker = L.marker([location.y, location.x], {
-                    id: location.id, crime_type: location.crime_type, icon: createMarkerIcon(location.crime_type)
+                    id: location.id, crime_type: findParent(location.crime_type_parent1, location.crime_type_parent2), icon: createMarkerIcon(findParent(location.crime_type_parent1, location.crime_type_parent2))
                 });
                 marker.on("click", (e) => mapItemClick(map, [e.target], e.latlng));
 

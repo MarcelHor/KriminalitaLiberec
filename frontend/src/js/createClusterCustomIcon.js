@@ -1,5 +1,5 @@
 import Chart from 'chart.js/auto';
-import {CATEGORY_COLORS} from "./colors.js";
+import {CATEGORY_COLORS,findParent} from "./colors.js";
 
 export const createClusterCustomIcon = (cluster) => {
     // Get the child markers of the cluster

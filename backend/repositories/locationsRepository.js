@@ -5,10 +5,10 @@ exports.getLocationsByDateRange = async (dateFrom, dateTo) => {
         '       crimes.x,\n' +
         '       crimes.y,\n' +
         '       crimes.date,\n' +
-        '       ifnull(t2.id, t1.id)     as "crime_type",\n' +
         '       t1.id                    as "crime_type_parent1",\n' +
-        '       t3.id                    as "crime_type_parent2",\n' +
-        '       t4.id                    as "crime_type_parent3",\n' +
+        '       t2.id                    as "crime_type_parent2",\n' +
+        '       t3.id                    as "crime_type_parent3",\n' +
+        '       t4.id                    as "crime_type_parent4",\n' +
         '       r.id                  as "relevance",\n' +
         '       s.id                  as "state"\n' +
         'from crimes\n' +
@@ -34,10 +34,12 @@ exports.getLocationsOnClick = async (ids) => {
         '       crimes.date,\n' +
         '       r.label as "relevance",\n' +
         '       s.label as "state",\n' +
-        '       ifnull(t2.name, t1.name) as "crime_type",\n' +
-        '       t1.label as "crime_type_parent1",\n' +
-        '       t3.label as "crime_type_parent2",\n' +
-        '       t4.label as "crime_type_parent3"\n' +
+        '  t1.id    as "crime_type_id",\n' +
+        '  t1.label as "crime_type_parent1",\n' +
+        '   t2.id    as "crime_type_id2",\n' +
+        '   t2.label as "crime_type_parent2",\n' +
+        '  t3.label as "crime_type_parent3",\n' +
+        '   t4.label as "crime_type_parent4"\n' +
         'FROM crimes\n' +
         '         INNER JOIN crime_types t1 ON crimes.crime_types_id = t1.id\n' +
         '         LEFT JOIN crime_types t2 ON t1.parent_id1 = t2.id\n' +
