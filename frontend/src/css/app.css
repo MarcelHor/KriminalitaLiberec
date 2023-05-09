@@ -68,5 +68,8 @@
 
 .react-calendar__tile--active {
     background-color: dodgerblue !important;
+}
 
+label:hover{
+    background-color: rgb(243 244 246) !important;
 }

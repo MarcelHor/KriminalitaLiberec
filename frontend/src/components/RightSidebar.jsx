@@ -26,7 +26,8 @@ export default function RightSidebar(props) {
         </div>
 
         <div
-            className={`h-[calc(100vh-80px)] overflow-y-scroll p-4 w-96 sticky bg-white z-1  ${isSidebarOpen ? 'block' : 'hidden'} md:block`}>
+            className={`h-[calc(100vh-80px)] overflow-y-scroll p-4  z-1 transition duration-300 ease-in-out ${
+                isSidebarOpen ? 'translate-x-0' : 'translate-x-full'} md:translate-x-0 fixed md:relative top-20 md:top-0 right-0 bg-white shadow-md w-full md:w-96`}>
             <div>
                 <h1 className={"text-xl mb-4 font-semibold"}>Graf</h1>
                 <SidebarChart count={props.count}/>
@@ -38,11 +39,13 @@ export default function RightSidebar(props) {
                 <h1 className={"text-xl mb-4 font-semibold"}>Nástroje</h1>
                 <div className={"flex justify-center items-center mb-4"}>
                     <div className="inline-flex">
-                        <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l w-28"
-                                onClick={() => props.setHeatMap(false)}>Body
+                        <button
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l w-28"
+                            onClick={() => props.setHeatMap(false)}>Body
                         </button>
-                        <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r w-28"
-                                onClick={() => props.setHeatMap(true)}>Heatmapa
+                        <button
+                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r w-28"
+                            onClick={() => props.setHeatMap(true)}>Heatmapa
                         </button>
                     </div>
                 </div>
@@ -66,7 +69,6 @@ export default function RightSidebar(props) {
                     <StateFilter setSelectedStates={props.setSelectedStates} stateCount={props.stateCount}/>
                 </div>
             </div>
-
         </div>
     </div>);
 }
