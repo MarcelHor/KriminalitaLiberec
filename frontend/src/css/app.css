@@ -40,4 +40,33 @@
     align-items: center;
 }
 
+.react-timerange-picker__wrapper {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border: thin solid gray;
+}
 
+.react-timerange-picker__inputGroup {
+    min-width: 0;
+    flex-grow: 0;
+}
+
+.react-daterange-picker__wrapper {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border: thin solid gray;
+}
+
+.react-daterange-picker__inputGroup {
+    min-width: 0;
+    flex-grow: 0;
+}
+
+.react-calendar__tile--active {
+    background-color: dodgerblue !important;
+
+}

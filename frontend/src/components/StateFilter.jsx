@@ -9,7 +9,6 @@ export const StateFilter = (props) => {
     const [topLevel, setTopLevel] = useState([]);
 
 
-
     const customIcons = {
         check: null,
         uncheck: null,
@@ -40,12 +39,10 @@ export const StateFilter = (props) => {
                 setStates(flatStates);
                 setChecked(flatStates.map((state) => state.value));
                 props.setSelectedStates(flatStates.map((state) => state.value));
-
             })
             .catch((error) => {
                 console.log(error);
             });
-
     }, []);
 
     const handleStateCheckboxChange = (checked, targetNode) => {
@@ -64,21 +61,11 @@ export const StateFilter = (props) => {
         if (Object.keys(topLevel).length > 0) {
             const updatedStates = states.map((node) => {
                 return {
-                    ...node,
-                    label: (
-                        <div className={"flex items-center justify-between w-72"}>
-                            <span className={"inline-block w-4 h-4"}>&nbsp;</span>
-                            <span
-                                className="inline-block max-w-xs overflow-hidden flex-1"
-                                style={{ maxWidth: "10rem" }}
-                            >
-              {topLevel[node.value]}
-            </span>
-                            <span className="inline-block w-6 text-center">
-              {props.stateCount[node.value] ? props.stateCount[node.value] : 0}
-            </span>
-                        </div>
-                    ),
+                    ...node, label: (
+                        <div className={"flex items-center justify-between p-1 w-72 border-b border-gray-200"}>
+                            <span className="inline-block overflow-hidden flex-1" style={{maxWidth: "10rem"}}>{topLevel[node.value]}</span>
+                            <span className="inline-block text-center">{props.stateCount[node.value] ? props.stateCount[node.value] : 0}</span>
+                        </div>),
                 };
             });
             setStates(updatedStates);
