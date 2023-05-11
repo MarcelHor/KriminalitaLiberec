@@ -7,10 +7,16 @@ import rightArrow from '../assets/right_arrow.svg';
 export const mapItemClick = (map, markers, position) => {
     const container = document.createElement('div'), contentContainer = document.createElement('div'),
         buttonContainer = document.createElement('div'), popupContent = document.createElement('div');
-
     container.appendChild(contentContainer);
     container.appendChild(buttonContainer);
     contentContainer.appendChild(popupContent);
+
+    const popupContentContainer = document.createElement('div');
+    popupContentContainer.style.overflow = 'hidden';
+    popupContentContainer.appendChild(popupContent);
+    contentContainer.appendChild(popupContentContainer);
+
+
 
     const maxPage = 100;
     let markerIds = [];
@@ -34,8 +40,27 @@ export const mapItemClick = (map, markers, position) => {
             });
     };
 
+    const animateContent = (direction) => {
+        return new Promise((resolve) => {
+            popupContent.animate([
+                { transform: `translateX(${direction}0%)`, opacity: 1 },
+                { transform: `translateX(${direction}100%)`, opacity: 0 }
+            ], { duration: 250, easing: 'ease-in-out', fill: 'forwards' }).onfinish = () => {
+                updatePopupContent();
+                popupContent.animate([
+                    { transform: `translateX(${direction * -1}100%)`, opacity: 0 },
+                    { transform: `translateX(0%)`, opacity: 1 }
+                ], { duration: 250, easing: 'ease-in-out', fill: 'forwards' }).onfinish = () => {
+                    resolve();
+                };
+            };
+        });
+    };
+
+
     let index = 0;
-    const cycleMarkers = (increment) => {
+    const cycleMarkers = async (increment) => {
+        await animateContent(increment);
         index += increment;
         currentMarkerIndex = index + currentPage * maxPage;
         if (markers.length > maxPage) {
@@ -96,7 +121,6 @@ export const mapItemClick = (map, markers, position) => {
                 hour: 'numeric', minute: 'numeric',
             });
 
-            console.log(data[index]);
             const crime_parent = findParent(data[index].crime_type_id, data[index].crime_type_id2);
             const categoryColor = CATEGORY_COLORS[crime_parent];
             const crime_parent_name = CATEGORY_NAMES[crime_parent];
@@ -118,7 +142,7 @@ export const mapItemClick = (map, markers, position) => {
                     <p>${data[index].state}</p>           
                 </div>
                 <div>
-${data[index].crime_type_parent1 && data[index].crime_type_parent1 != crime_parent_name ?
+                    ${data[index].crime_type_parent1 && data[index].crime_type_parent1 != crime_parent_name ?
                 `<h2 class="font-bold ">Třídy</h2>` : ''}      
               <div class="lowercase">
                         ${data[index].crime_type_parent1 && data[index].crime_type_parent1 != crime_parent_name ? `${data[index].crime_type_parent1}` : ''}

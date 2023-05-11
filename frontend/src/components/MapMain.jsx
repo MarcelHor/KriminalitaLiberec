@@ -21,37 +21,34 @@ export default function MapMain(props) {
     const [selectedStates, setSelectedStates] = useState([]);
     const [heatMap, setHeatMap] = useState(false);
 
+    const filterMarkers = (locations, selected, selectedStates, timeRange) => {
+        const selectedInt = selected.map((item) => parseInt(item));
+        const start = timeRange[0].split(":").map(Number);
+        const end = timeRange[1].split(":").map(Number);
+        const startTime = start[0] * 60 + start[1];
+        const endTime = end[0] * 60 + end[1];
 
-    useEffect(() => {
-        const visibleMarkers = props.locations.filter((marker) => {
+        return locations.filter((marker) => {
             const date = new Date(marker.date);
             const hours = date.getHours();
             const minutes = date.getMinutes();
-            const start = timeRange[0].split(":").map(Number);
-            const end = timeRange[1].split(":").map(Number);
-            const startTime = start[0] * 60 + start[1];
-            const endTime = end[0] * 60 + end[1];
             const currentTime = hours * 60 + minutes;
-            const isBetween = (startTime < endTime && currentTime >= startTime && currentTime <= endTime) || // start and end time are on the same day
-                (startTime > endTime && (currentTime >= startTime || currentTime <= endTime)); // start and end time cross midnight
-            return isBetween;
+
+
+
+            const timeCondition = (startTime < endTime && currentTime >= startTime && currentTime <= endTime) || (startTime > endTime && (currentTime >= startTime || currentTime <= endTime));
+
+            const categoryCondition = selectedInt.includes(marker.crime_type_parent1) || selectedInt.includes(marker.crime_type_parent2) || selectedInt.includes(marker.crime_type_parent3) || selectedInt.includes(marker.crime_type_parent4) || (marker.children === undefined && selectedInt.includes(marker.crime_type));
+
+            const stateCondition = selectedStates.includes(marker.state);
+
+            return timeCondition && categoryCondition && stateCondition;
         });
-        setVisibleMarkers(visibleMarkers);
-    }, [timeRange, props.locations]);
+    };
 
     useEffect(() => {
-        const selectedInt = selected.map((item) => parseInt(item));
-        const visibleMarkers = props.locations.filter((marker) => {
-            if (selectedInt.includes(marker.crime_type_parent1) || selectedInt.includes(marker.crime_type_parent2) || selectedInt.includes(marker.crime_type_parent3)) {
-                // Check if the marker's state is not selected
-                if (selectedStates.includes(marker.state)) {
-                    return true;
-                }
-            }
-            return false;
-        });
-        setVisibleMarkers(visibleMarkers);
-    }, [selected, props.locations, selectedStates]);
+        setVisibleMarkers(filterMarkers(props.locations, selected, selectedStates, timeRange));
+    }, [props.locations, selected, selectedStates, timeRange]);
 
 
     // State for the number of markers in each category (used for the pie chart)

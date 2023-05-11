@@ -10,6 +10,7 @@ export const CrimesTree = (props) => {
     const [expanded, setExpanded] = useState([]);
     const [types, setTypes] = useState([]);
     const [topLevel, setTopLevel] = useState([]);
+    const [topLevelUnchecked, setTopLevelUnchecked] = useState([]);
 
     const convertEmptyChildrenToObject = (nodes) => {
         nodes.forEach((node) => {
@@ -45,7 +46,6 @@ export const CrimesTree = (props) => {
                     }
                 }
                 traverse(types);
-                console.log(types);
                 setChecked(checked);
                 props.setSelected(checked);
             })
@@ -56,25 +56,39 @@ export const CrimesTree = (props) => {
 
 
     const onCheck = (checked, targetNode) => {
-        console.log(checked);
         if (targetNode.isChild) {
-            // remove itself from checked
-            const index = checked.indexOf(targetNode.value);
+            const index = checked.indexOf(targetNode.parent.value);
             if (index > -1) {
+                // remove parent from checked
                 checked.splice(index, 1);
             }
-            // add parent to checked
-            checked.push(targetNode.parent.value);
-            props.setSelected(checked);
-            setChecked(checked);
+            // If the child node is checked, add it to the checked array
+            if (targetNode.checked) {
+                checked.push(targetNode.value);
+            } else {
+                // If the child node is unchecked, remove it from the checked array
+                const childIndex = checked.indexOf(targetNode.value);
+                if (childIndex > -1) {
+                    checked.splice(childIndex, 1);
+                }
+            }
         } else if (targetNode.isParent) {
-            setChecked(checked);
-            props.setSelected(checked);
-        } else if (!targetNode.isChild && !targetNode.isParent) {
-            setChecked(checked);
-            props.setSelected(checked);
+            if (!targetNode.checked) {
+                // If the parent node is unchecked, remove all its children from the checked array
+                targetNode.children.forEach((child) => {
+                    const childIndex = checked.indexOf(child.value);
+                    if (childIndex > -1) {
+                        checked.splice(childIndex, 1);
+                    }
+                });
+            }
         }
+
+        setChecked(checked);
+        props.setSelected(checked);
+        console.log(checked);
     };
+
 
 
     const onExpand = (expanded) => {

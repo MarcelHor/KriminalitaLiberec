@@ -6,7 +6,6 @@ export default function Header() {
     const [popup, setPopup] = useState(null);
 
     const openPopup = (name) => {
-        console.log(name);
         setPopup({name});
     };
 
