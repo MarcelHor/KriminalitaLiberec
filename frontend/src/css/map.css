@@ -1,5 +1,10 @@
-.leaflet-draw { display: none; }
+.leaflet-draw {
+    display: none;
+}
 
 .leaflet-container .leaflet-marker-pane img {
     max-width: 50px !important;
 }
+
+
+

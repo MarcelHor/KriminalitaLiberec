@@ -129,7 +129,7 @@ export const CrimesTree = (props) => {
 
     return (<>
         <h2 className="text-lg mb-2">Typy</h2>
-        <div className={"lowercase"}>
+        <div className={"lowercase flex flex-col items-center"}>
             <CheckboxTree
                 nodes={types}
                 checked={checked}

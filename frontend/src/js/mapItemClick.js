@@ -4,6 +4,7 @@ import clock from '../assets/clock.svg';
 import {CATEGORY_COLORS, CATEGORY_NAMES, findParent} from './colors';
 import rightArrow from '../assets/right_arrow.svg';
 
+
 export const mapItemClick = (map, markers, position) => {
     const container = document.createElement('div'), contentContainer = document.createElement('div'),
         buttonContainer = document.createElement('div'), popupContent = document.createElement('div');
@@ -17,7 +18,6 @@ export const mapItemClick = (map, markers, position) => {
     contentContainer.appendChild(popupContentContainer);
 
 
-
     const maxPage = 100;
     let markerIds = [];
     const totalPage = Math.ceil(markers.length / maxPage);
@@ -26,41 +26,22 @@ export const mapItemClick = (map, markers, position) => {
     markers.map((marker) => markerIds.push(marker.options.id));
 
     let data;
-    const fetchData = (page) => {
+    const fetchData = async (page) => {
         const start = page * maxPage;
         const end = start + maxPage;
         const ids = markerIds.slice(start, end);
         axios.get(`http://localhost:3000/api/locations/${ids}`)
             .then((response) => {
                 data = response.data;
-                updatePopupContent();
+                updatePopupContent(1);
             })
             .catch((error) => {
                 console.log(error);
             });
     };
 
-    const animateContent = (direction) => {
-        return new Promise((resolve) => {
-            popupContent.animate([
-                { transform: `translateX(${direction}0%)`, opacity: 1 },
-                { transform: `translateX(${direction}100%)`, opacity: 0 }
-            ], { duration: 250, easing: 'ease-in-out', fill: 'forwards' }).onfinish = () => {
-                updatePopupContent();
-                popupContent.animate([
-                    { transform: `translateX(${direction * -1}100%)`, opacity: 0 },
-                    { transform: `translateX(0%)`, opacity: 1 }
-                ], { duration: 250, easing: 'ease-in-out', fill: 'forwards' }).onfinish = () => {
-                    resolve();
-                };
-            };
-        });
-    };
-
-
     let index = 0;
     const cycleMarkers = async (increment) => {
-        await animateContent(increment);
         index += increment;
         currentMarkerIndex = index + currentPage * maxPage;
         if (markers.length > maxPage) {
@@ -69,7 +50,7 @@ export const mapItemClick = (map, markers, position) => {
                 index = 0;
                 currentMarkerIndex = 0;
                 currentPage = 0;
-                fetchData(currentPage);
+                await fetchData(currentPage);
             }
             // if we are at beginning of the current data set and there is no previous data set go to the end of marker list
             else if (index < 0 && currentPage === 0) {
@@ -81,23 +62,23 @@ export const mapItemClick = (map, markers, position) => {
                 }
                 currentMarkerIndex = markers.length - 1;
                 currentPage = totalPage - 1;
-                fetchData(currentPage);
+                await fetchData(currentPage);
             }
             // If we're at the end of the current data set and there is a next data set, fetch the next data set
             else if (index >= data.length && currentPage < totalPage) {
                 currentPage++;
                 index = 0;
-                fetchData(currentPage);
+                await fetchData(currentPage);
             }
             // If we're at the beginning of the current data set and there is a previous data set, fetch the previous data set
             else if (index < 0 && currentPage > 0) {
                 currentPage--;
                 index = 9;
-                fetchData(currentPage);
+                await fetchData(currentPage);
             }
             // If we're in the middle of the current data set, just update the popup content
             else {
-                updatePopupContent();
+                updatePopupContent(increment);
             }
         } else {
             if (index >= markers.length) {
@@ -107,11 +88,12 @@ export const mapItemClick = (map, markers, position) => {
                 index = markers.length - 1;
                 currentMarkerIndex = markers.length - 1;
             }
-            updatePopupContent();
+            updatePopupContent(increment);
         }
 
     };
-    const updatePopupContent = () => {
+
+    const updatePopupContent = (direction) => {
         if (data) {
             const date = new Date(data[index].date);
             const dateStr = date.toLocaleDateString('cs-CZ', {
@@ -142,8 +124,7 @@ export const mapItemClick = (map, markers, position) => {
                     <p>${data[index].state}</p>           
                 </div>
                 <div>
-                    ${data[index].crime_type_parent1 && data[index].crime_type_parent1 != crime_parent_name ?
-                `<h2 class="font-bold ">Třídy</h2>` : ''}      
+                    ${data[index].crime_type_parent1 && data[index].crime_type_parent1 != crime_parent_name ? `<h2 class="font-bold ">Třídy</h2>` : ''}      
               <div class="lowercase">
                         ${data[index].crime_type_parent1 && data[index].crime_type_parent1 != crime_parent_name ? `${data[index].crime_type_parent1}` : ''}
                         ${data[index].crime_type_parent2 && data[index].crime_type_parent2 != crime_parent_name ? `, ${data[index].crime_type_parent2}` : ''}
@@ -153,6 +134,13 @@ export const mapItemClick = (map, markers, position) => {
                 </div>
             </div>
         `;
+            popupContent.animate([// keyframes
+                {
+                    transform: `translateX(${direction > 0 ? '-100%' : '100%'})`, opacity: '0'
+                }, {transform: 'translateX(0)', opacity: '1'}], {
+                // timing options
+                duration: 200, iterations: 1
+            });
             count.textContent = `(${currentMarkerIndex + 1}/${markers.length})`;
         }
     }
@@ -176,10 +164,6 @@ export const mapItemClick = (map, markers, position) => {
     count.textContent = `(${currentMarkerIndex + 1}/${markers.length})`;
 
     if (markers.length > 1) buttonContainer.appendChild(count);
-
-    container.animate([{transform: 'translateY(10px)', opacity: 0}, {transform: 'translateY(0px)', opacity: 1}], {
-        duration: 200, easing: 'ease-in-out', fill: 'forwards'
-    });
 
     // Set CSS styles to arrange the content and buttons vertically
     container.style.display = 'flex';

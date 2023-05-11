@@ -75,7 +75,9 @@ export const StateFilter = (props) => {
 
     return (<>
         <h2 className={"text-lg mb-2"}>Stav objasnění</h2>
-        <CheckboxTree nodes={states} checked={checked} onCheck={handleStateCheckboxChange} expanded={expanded}
-                      nativeCheckboxes={true} icons={customIcons} showNodeIcon={false}/>
+        <div className={"flex flex-col items-center"}>
+            <CheckboxTree nodes={states} checked={checked} onCheck={handleStateCheckboxChange} expanded={expanded}
+                          nativeCheckboxes={true} icons={customIcons} showNodeIcon={false}/>
+        </div>
     </>);
 }
