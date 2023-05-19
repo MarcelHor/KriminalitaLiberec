@@ -2,7 +2,7 @@ import {forwardRef, useEffect, useRef} from "react";
 import {FeatureGroup, useMap} from "react-leaflet";
 import {EditControl} from "react-leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw.css";
-import "../css/draw.css";
+import "../css/map.css";
 import {booleanContains} from '@turf/turf';
 import {mapItemClick} from "../js/mapItemClick.js";
 
@@ -17,15 +17,35 @@ const MapDraw = forwardRef((props, editRef) => {
         const selectedClusters = [];
         const selectedMarkers = [];
         map.eachLayer((layer) => {
+            //TODO: check the if statement below
             if (layer instanceof L.MarkerCluster && booleanContains(drawnShape, layer.toGeoJSON())) {
+                //check if the cluster is already in the selectedClusters by id
+                if (selectedClusters.some(cluster => cluster.id === layer.id && cluster.getChildCount() === layer.getChildCount())) {
+                    return;
+                }
                 selectedClusters.push(layer);
+
             } else if (layer instanceof L.Marker && booleanContains(drawnShape, layer.toGeoJSON())) {
+                //check if the marker is already in the selectedClusters by id and child_count and x and y
+                if (selectedMarkers.some(marker => marker.options.id === layer.options.id && marker.options.crime_type === layer.options.crime_type && marker.options.x === layer.options.x && marker.options.y === layer.options.y)) {
+                    return;
+                }
                 selectedMarkers.push(layer);
             }
+
+
         });
+
+        if (selectedClusters.length === 0 && selectedMarkers.length === 0) {
+            if (featureGroupRef.current && featureGroupRef.current.getLayers().length > 0) {
+                featureGroupRef.current.removeLayer(featureGroupRef.current.getLayers()[0]);
+                return;
+            }
+        }
 
         const clusterChildren = selectedClusters.flatMap(cluster => cluster.getAllChildMarkers());
         const allMarkers = [...selectedMarkers, ...clusterChildren];
+
         if (allMarkers.length > 0) {
             mapItemClick(map, allMarkers, e.layer.getBounds().getCenter());
         }
@@ -33,14 +53,13 @@ const MapDraw = forwardRef((props, editRef) => {
 
     // When the user closes the popup, remove the drawn shape
     useEffect(() => {
-        const handleChange = () => {
-            if (featureGroupRef.current.getLayers().length > 0) {
+        map.on("popupclose", () => {
+            if (featureGroupRef.current && featureGroupRef.current.getLayers().length > 0) {
                 featureGroupRef.current.removeLayer(featureGroupRef.current.getLayers()[0]);
             }
-        }
-        map.on("popupclose", handleChange);
-
+        });
     }, [map]);
+
 
     // When the user starts drawing a shape, remove the existing shape
     const onDrawStart = (e) => {

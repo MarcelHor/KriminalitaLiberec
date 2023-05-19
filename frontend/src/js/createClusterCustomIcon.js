@@ -1,5 +1,5 @@
 import Chart from 'chart.js/auto';
-import {CATEGORY_COLORS} from "./colors.js";
+import {CATEGORY_COLORS,findParent} from "./colors.js";
 
 export const createClusterCustomIcon = (cluster) => {
     // Get the child markers of the cluster
@@ -30,8 +30,6 @@ export const createClusterCustomIcon = (cluster) => {
                 data: Object.values(categories),
                 backgroundColor: Object.keys(categories).map((category) => CATEGORY_COLORS[category]),
                 borderWidth: 0,
-
-
             }]
         }, options: {
             plugins: {
@@ -45,23 +43,22 @@ export const createClusterCustomIcon = (cluster) => {
             }, hover: {
                 mode: null,
             }, responsive: false, cutout: '80%', radius: '90%',
-
         }
     });
 
-
-    //draw circle in the middle of the chart
+    // Draw circle in the middle of the chart
     ctx.beginPath();
-    ctx.arc(x, y, 17.5, 0, 2 * Math.PI);
+    ctx.arc(x, y, 18, 0, 2 * Math.PI);
     ctx.fillStyle = 'rgb(255,255,255)';
     ctx.fill();
 
-    //draw circle around the chart
+    // Draw circle around the chart
     ctx.beginPath();
-    ctx.arc(x, y, 24, 0, 2 * Math.PI);
+    ctx.arc(x, y, 22.5, 0, 2 * Math.PI);
     ctx.strokeStyle = 'rgb(255,255,255)';
     ctx.stroke();
 
+    // Draw text for the total crimes count
     ctx.font = '14px Arial';
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
@@ -73,7 +70,12 @@ export const createClusterCustomIcon = (cluster) => {
         ctx.fillText(`${totalCrimes}`, x, y);
     }
 
+    // Convert the chart to an image
+    const chartImage = new Image();
+    chartImage.src = canvas.toDataURL();
+
+
     return L.divIcon({
-        html: canvas, className: 'cluster-icon', iconSize: L.point(50, 50, true),
+        html: chartImage, className: 'cluster-icon', iconSize: L.point(50, 50, true),
     });
-}
+};

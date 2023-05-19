@@ -1,19 +1,24 @@
-const pool = require('../db');
+const pool = require('../config/db');
+const typesRepository = require('../repositories/typesRepository');
 
-const getAllTypes = async () => {
-    const rows = await pool.query('select ifnull(t2.name, t1.name) as "crime_type",\n' +
-        '       t1.label as "crime_type_parent1",\n' +
-        '       t3.label as "crime_type_parent2",\n' +
-        '       t4.label as "crime_type_parent3"\n' +
-        'from crime_types t1\n' +
-        '         left join crime_types t2 on t1.parent_id1 = t2.id\n' +
-        '         left join crime_types t3 on t1.parent_id2 = t3.id\n' +
-        '         left join crime_types t4 on t1.parent_id3 = t4.id\n' +
-        'order by t1.id asc');
-    return rows;
+exports.getAllTypes = async (req, res) => {
+    try {
+        const types = await typesRepository.getAllTypes();
+        res.status(200).send(types[0]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal server error');
+    }
 }
 
 
-module.exports = {
-    getAllTypes
+exports.getNestedTypes = async (req, res) => {
+    try {
+        const types = await typesRepository.getNestedTypes();
+        res.status(200).send(types);
+    } catch (error) {
+        res.status(500).send('Server error');
+    }
+
 }
+
