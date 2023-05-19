@@ -19,6 +19,7 @@ export const mapItemClick = (map, markers, position) => {
     const count = document.createElement('span');
     count.style.marginLeft = '64px';
 
+    const maxMarkers = 100;
     const maxPage = 100;
     let markerIds = [];
     const totalPage = Math.ceil(markers.length / maxPage);
@@ -96,7 +97,7 @@ export const mapItemClick = (map, markers, position) => {
 
     const updatePopupContent = (direction) => {
         if (data) {
-            if (markers.length > 500) {
+            if (markers.length > maxMarkers) {
 
                 const crimeIds = markers.map((item) => item.options.crime_type);
                 const crimeCounts = {}; // Object to store the count of each crime type
@@ -113,6 +114,7 @@ export const mapItemClick = (map, markers, position) => {
                 let graphHTML = '';
                 Object.entries(crimeCounts).forEach(([name, count]) => {
                     const percentage = (count / maxCount) * 100;
+                    console.log("percentage", percentage);
                     const barColor = CATEGORY_COLORS_NAMES[name];
                     graphHTML += `
                                     <div>
@@ -121,7 +123,7 @@ export const mapItemClick = (map, markers, position) => {
                                                           <div class="">${count}</div>
                                                         </div>
                                                         <div class="relative">
-                                        <div class="overflow-hidden h-1 mb-1 text-xs rounded" style="background-color: ${barColor}; width: ${percentage}px;"></div>                     
+                                        <div class="overflow-hidden h-1 mb-1 text-xs rounded" style="background-color: ${barColor}; width: ${percentage}%;"></div>                     
                                     </div>                 
                                 `;
                 });
@@ -191,7 +193,7 @@ export const mapItemClick = (map, markers, position) => {
         }
     }
 
-    if (markers.length < 500 && markers.length > 1) {
+    if (markers.length < maxMarkers && markers.length > 1) {
         const prevButton = document.createElement('button');
         prevButton.innerHTML = `<img src="${rightArrow}" alt="previous" style="width: 24px; height: 24px; rotate: 180deg;" class="rounded-full hover:bg-gray-200">`;
         prevButton.addEventListener('click', () => cycleMarkers(-1));
