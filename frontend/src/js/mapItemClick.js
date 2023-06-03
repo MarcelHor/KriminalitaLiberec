@@ -114,7 +114,6 @@ export const mapItemClick = (map, markers, position) => {
                 let graphHTML = '';
                 Object.entries(crimeCounts).forEach(([name, count]) => {
                     const percentage = (count / maxCount) * 100;
-                    console.log("percentage", percentage);
                     const barColor = CATEGORY_COLORS_NAMES[name];
                     graphHTML += `
                                     <div>

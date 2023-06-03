@@ -8,7 +8,7 @@ export default function App() {
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
-    const [fetchCount, setCount] = useState(0);
+    const [fetchCounAt, setCount] = useState(0);
 
     const lastWeekDate = new Date();
     lastWeekDate.setDate(lastWeekDate.getDate() - 14);

@@ -86,7 +86,6 @@ export const CrimesTree = (props) => {
 
         setChecked(checked);
         props.setSelected(checked);
-        console.log(checked);
     };
 
 
