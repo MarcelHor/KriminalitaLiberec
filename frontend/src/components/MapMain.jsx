@@ -6,6 +6,7 @@ import {useEffect, useRef, useState} from "react";
 import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
 import {findParent} from "../js/colors.js";
+import PopupModal from "./PopupModal.jsx";
 
 export default function MapMain(props) {
     const mapRef = useRef();
@@ -20,6 +21,9 @@ export default function MapMain(props) {
     const [selectedCrimes, setSelectedCrimes] = useState([]);
     const [selectedStates, setSelectedStates] = useState([]);
     const [heatMap, setHeatMap] = useState(false);
+
+    const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+    const [isLoadModalOpen, setIsLoadModalOpen] = useState(true);
 
     const filterMarkers = (locations, selected, selectedStates, timeRange) => {
         const selectedInt = selected.map((item) => parseInt(item));
@@ -98,11 +102,35 @@ export default function MapMain(props) {
 
         </MapContainer>
 
+        <PopupModal isPopupOpen={isSaveModalOpen} setisPopupOpen={setIsSaveModalOpen}>
+            <div className={"flex flex-col items-center"}>
+                <h1 className={"text-2xl font-bold mb-4"}>Uložit filtr</h1>
+                <input type={"text"} className={"border-2 border-gray-300 rounded-md p-2 mb-4 w-2/3"}
+                       placeholder={"Název"}/>
+                <textarea className={"border-2 border-gray-300 rounded-md p-2 w-2/3 max-h-44 overflow-hidden mb-4"} placeholder={"Popis"}/>
+                <div className={"flex flex-row items-center justify-center w-2/3"}>
+                    <button className={"bg-red-500 text-white rounded-md p-2 mr-2 w-full"} onClick={() => setIsSaveModalOpen(false)}>Zrušit</button>
+                    <button className={"bg-green-500 text-white rounded-md p-2 w-full"}>Uložit</button>
+                </div>
+            </div>
+        </PopupModal>
+
+
+        <PopupModal isPopupOpen={isLoadModalOpen} setisPopupOpen={setIsLoadModalOpen}>
+            <div className={"flex flex-col items-center"}>
+                <h1 className={"text-2xl font-bold mb-4"}>Načíst filtr</h1>
+
+            </div>
+        </PopupModal>
+
+
+
 
         <RightSidebar
             editRef={editRef} count={count} dateRange={props.dateRange} timeRange={timeRange}
-            setDateRange={props.setDateRange} setTimeRange={setTimeRange} selected={selectedCrimes} setSelected={setSelectedCrimes}
-            setSelectedStates={setSelectedStates} setHeatMap={setHeatMap} stateCount={stateCount}
+            setDateRange={props.setDateRange} setTimeRange={setTimeRange} selected={selectedCrimes}
+            setSelected={setSelectedCrimes}
+            setSelectedStates={setSelectedStates} setHeatMap={setHeatMap} stateCount={stateCount} setIsSaveModalOpen={setIsSaveModalOpen} setIsLoadModalOpen={setIsLoadModalOpen}
         />
     </div>);
 }

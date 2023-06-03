@@ -1,17 +1,12 @@
 import React, {useState} from 'react';
 import logo_s2 from '../assets/logo_s2.png';
-import Popup from './HeaderPopup';
+import Popup from './PopupModal.jsx';
+import PopupModal from "./PopupModal.jsx";
 
 export default function Header() {
-    const [popup, setPopup] = useState(null);
-
-    const openPopup = (name) => {
-        setPopup({name});
-    };
-
-    const closePopup = () => {
-        setPopup(null);
-    };
+    const [isHelpOpen, setIsHelpOpen] = useState(false);
+    const [isAboutOpen, setIsAboutOpen] = useState(false);
+    const [isContactOpen, setIsContactOpen] = useState(false);
 
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -38,40 +33,36 @@ export default function Header() {
             <ul className="flex flex-col md:flex-row items-center md:items-stretch md:justify-end">
                 <li
                     className="hover:bg-white hover:bg-opacity-5 rounded p-2 md:mr-4 cursor-pointer"
-                    onClick={() => openPopup('Nápověda')}
+                    onClick={() => setIsHelpOpen(true)}
                 >
                     NÁPOVĚDA
                 </li>
                 <li
                     className="hover:bg-white hover:bg-opacity-5 rounded p-2 md:mr-4 cursor-pointer"
-                    onClick={() => openPopup('O projektu')}
+                    onClick={() => setIsAboutOpen(true)}
                 >
                     O PROJEKTU
                 </li>
                 <li
                     className="hover:bg-white hover:bg-opacity-5 rounded p-2 cursor-pointer"
-                    onClick={() => openPopup('Kontakt')}
+                    onClick={() => setIsContactOpen(true)}
                 >
                     KONTAKT
                 </li>
             </ul>
         </nav>
-        {popup && (<Popup name={popup.name} closePopup={closePopup}>
-            {popup.name === 'Nápověda' && (<div className="p-4">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget ultricies
-                </p>
-            </div>)}
-            {popup.name === 'O projektu' && (<div className="p-4">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget ultricies
-                </p>
-            </div>)}
-            {popup.name === 'Kontakt' && (<div className="p-4">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget ultricies
-                </p>
-            </div>)}
-        </Popup>)}
+
+        <PopupModal isPopupOpen={isAboutOpen} setisPopupOpen={setIsAboutOpen}>
+            <h1 className="text-2xl font-bold mb-4">O projektu</h1>
+        </PopupModal>
+
+        <PopupModal isPopupOpen={isHelpOpen} setisPopupOpen={setIsHelpOpen}>
+            <h1 className="text-2xl font-bold mb-4">Nápověda</h1>
+        </PopupModal>
+
+        <PopupModal isPopupOpen={isContactOpen} setisPopupOpen={setIsContactOpen}>
+            <h1 className="text-2xl font-bold mb-4">Kontakt</h1>
+        </PopupModal>
+
     </header>);
 }

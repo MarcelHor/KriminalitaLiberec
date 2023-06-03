@@ -180,12 +180,12 @@ export const mapItemClick = (map, markers, position) => {
                 </div>
             </div>
         `;
-                popupContent.animate([// keyframes
-                    {
-                        transform: `translateX(${direction > 0 ? '-100%' : '100%'})`, opacity: '0'
-                    }, {transform: 'translateX(0)', opacity: '1'}], {
-                    // timing options
-                    duration: 250, iterations: 1
+                popupContent.animate([
+                    { opacity: 0 },
+                    { opacity: 1 },
+                ], {
+                    duration: 300,
+                    easing: 'ease-in-out',
                 });
                 count.textContent = `(${currentMarkerIndex + 1}/${markers.length})`;
             }
