@@ -22,7 +22,7 @@ export default function PopupModal(props) {
     return (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 z-10 text-black" onClick={() => props.setisPopupOpen(false)}>
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white md:w-1/2 w-full h-2/3 rounded-lg" onClick={(event) => event.stopPropagation()}>
-                <img src={close} onClick={() => props.setClosePopup(false)} className="absolute top-0 right-0 m-4 w-8 cursor-pointer" alt="Close button" />
+                <img src={close} onClick={() => props.setisPopupOpen(false)} className="absolute top-0 right-0 m-4 w-8 cursor-pointer" alt="Close button" />
                 <h1 className="text-2xl font-bold text-center mt-4">{props.name}</h1>
                 {props.children}
             </div>

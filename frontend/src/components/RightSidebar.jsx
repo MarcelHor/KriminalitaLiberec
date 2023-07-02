@@ -71,11 +71,11 @@ export default function RightSidebar(props) {
                 </div>
 
                 <div className={"mb-4"}>
-                    <CrimesTree setSelected={props.setSelected} count={props.count}/>
+                    <CrimesTree setSelected={props.setSelected} count={props.count} selectedCrimes={props.selectedCrimes}/>
                 </div>
 
                 <div>
-                    <StateFilter setSelectedStates={props.setSelectedStates} stateCount={props.stateCount}/>
+                    <StateFilter setSelectedStates={props.setSelectedStates} stateCount={props.stateCount} selectedStates={props.selectedStates}/>
                 </div>
             </div>
         </div>

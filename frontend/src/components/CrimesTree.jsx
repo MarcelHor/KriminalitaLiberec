@@ -54,6 +54,9 @@ export const CrimesTree = (props) => {
             });
     }, []);
 
+    useEffect(() => {
+        setChecked(props.selectedCrimes);
+    }, [props.selectedCrimes]);
 
     const onCheck = (checked, targetNode) => {
         if (targetNode.isChild) {
