@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import CheckboxTree from "react-checkbox-tree";
 
-export const StateFilter = (props) => {
+const StateFilter = (props) => {
     const [states, setStates] = useState([]);
     const [expanded, setExpanded] = useState([]);
     const [checked, setChecked] = useState([]);
@@ -45,6 +45,10 @@ export const StateFilter = (props) => {
             });
     }, []);
 
+    useEffect(() => {
+        setChecked(props.selectedStates);
+    }, [props.selectedStates]);
+
     const handleStateCheckboxChange = (checked, targetNode) => {
         const id = targetNode.value;
         props.setSelectedStates((prev) => {
@@ -61,11 +65,13 @@ export const StateFilter = (props) => {
         if (Object.keys(topLevel).length > 0) {
             const updatedStates = states.map((node) => {
                 return {
-                    ...node, label: (
-                        <div className={"flex items-center justify-between p-1 w-72 border-b border-gray-200"}>
-                            <span className="inline-block overflow-hidden flex-1" style={{maxWidth: "10rem"}}>{topLevel[node.value]}</span>
-                            <span className="inline-block text-center">{props.stateCount[node.value] ? props.stateCount[node.value] : 0}</span>
-                        </div>),
+                    ...node,
+                    label: (<div className={"flex items-center justify-between p-1 w-72 border-b border-gray-200"}>
+                            <span className="inline-block overflow-hidden flex-1"
+                                  style={{maxWidth: "10rem"}}>{topLevel[node.value]}</span>
+                        <span
+                            className="inline-block text-center">{props.stateCount[node.value] ? props.stateCount[node.value] : 0}</span>
+                    </div>),
                 };
             });
             setStates(updatedStates);
@@ -81,3 +87,5 @@ export const StateFilter = (props) => {
         </div>
     </>);
 }
+
+export default StateFilter;

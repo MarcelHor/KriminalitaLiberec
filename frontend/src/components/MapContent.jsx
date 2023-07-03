@@ -8,7 +8,7 @@ import {findParent} from "../js/colors.js";
 import 'leaflet.heat';
 
 // This component is used to add the markers to the map and handle input from the user
-export default function MapContent(props) {
+const MapContent = (props) => {
     const map = useMap();
     const markerClusterGroupRef = useRef(null);
     const locations = props.visibleMarkers;
@@ -79,3 +79,5 @@ export default function MapContent(props) {
 
     return null;
 }
+
+export default MapContent;

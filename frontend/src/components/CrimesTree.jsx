@@ -5,7 +5,7 @@ import axios from "axios";
 import rightArrow from "../assets/right_arrow.svg";
 import {CATEGORY_COLORS} from "../js/colors.js";
 
-export const CrimesTree = (props) => {
+const CrimesTree = (props) => {
     const [checked, setChecked] = useState([]);
     const [expanded, setExpanded] = useState([]);
     const [types, setTypes] = useState([]);
@@ -54,6 +54,9 @@ export const CrimesTree = (props) => {
             });
     }, []);
 
+    useEffect(() => {
+        setChecked(props.selectedCrimes);
+    }, [props.selectedCrimes]);
 
     const onCheck = (checked, targetNode) => {
         if (targetNode.isChild) {
@@ -86,7 +89,6 @@ export const CrimesTree = (props) => {
 
         setChecked(checked);
         props.setSelected(checked);
-        console.log(checked);
     };
 
 
@@ -146,3 +148,5 @@ export const CrimesTree = (props) => {
     </>);
 
 };
+
+export default CrimesTree;

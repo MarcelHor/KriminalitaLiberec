@@ -1,5 +1,6 @@
 import axios from "axios";
 
+//TODO: udělat z toho hook?
 export function fetchData(dateRange, setLocations, setLoading, setError) {
     setError(false);
     setLoading(false);
@@ -12,8 +13,7 @@ export function fetchData(dateRange, setLocations, setLoading, setError) {
 
     displayLoading();
 
-    axios
-        .get(`http://localhost:3000/api/locations/${dateRange[0].toISOString()}/${dateRange[1].toISOString()}`)
+    axios.get(`http://localhost:3000/api/locations/${dateRange[0].toISOString()}/${dateRange[1].toISOString()}`)
         .then((res) => {
             // Clear the timeout and hide the loading animation
             clearTimeout(timeout);

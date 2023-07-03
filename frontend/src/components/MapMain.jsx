@@ -6,6 +6,7 @@ import {useEffect, useRef, useState} from "react";
 import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
 import {findParent} from "../js/colors.js";
+import SaveLoadModals from "./FilterModal.jsx";
 
 export default function MapMain(props) {
     const mapRef = useRef();
@@ -17,9 +18,13 @@ export default function MapMain(props) {
 
     const [timeRange, setTimeRange] = useState(["00:00", "23:59"]);
     const [visibleMarkers, setVisibleMarkers] = useState([]);
-    const [selected, setSelected] = useState([]);
+    const [selectedCrimes, setSelectedCrimes] = useState([]);
     const [selectedStates, setSelectedStates] = useState([]);
     const [heatMap, setHeatMap] = useState(false);
+
+    const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+    const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
+
 
     const filterMarkers = (locations, selected, selectedStates, timeRange) => {
         const selectedInt = selected.map((item) => parseInt(item));
@@ -35,7 +40,6 @@ export default function MapMain(props) {
             const currentTime = hours * 60 + minutes;
 
 
-
             const timeCondition = (startTime < endTime && currentTime >= startTime && currentTime <= endTime) || (startTime > endTime && (currentTime >= startTime || currentTime <= endTime));
 
             const categoryCondition = selectedInt.includes(marker.crime_type_parent1) || selectedInt.includes(marker.crime_type_parent2) || selectedInt.includes(marker.crime_type_parent3) || selectedInt.includes(marker.crime_type_parent4) || (marker.children === undefined && selectedInt.includes(marker.crime_type));
@@ -47,8 +51,8 @@ export default function MapMain(props) {
     };
 
     useEffect(() => {
-        setVisibleMarkers(filterMarkers(props.locations, selected, selectedStates, timeRange));
-    }, [props.locations, selected, selectedStates, timeRange]);
+        setVisibleMarkers(filterMarkers(props.locations, selectedCrimes, selectedStates, timeRange));
+    }, [props.locations, selectedCrimes, selectedStates, timeRange]);
 
 
     // State for the number of markers in each category (used for the pie chart)
@@ -61,7 +65,7 @@ export default function MapMain(props) {
             return counts;
         }, {});
         setCount(count);
-    }, [visibleMarkers, props.locations, selected]);
+    }, [visibleMarkers, props.locations, selectedCrimes]);
 
     const [stateCount, setStateCount] = useState({});
     useEffect(() => {
@@ -99,11 +103,23 @@ export default function MapMain(props) {
 
         </MapContainer>
 
+        <SaveLoadModals timeRange={timeRange} setTimeRange={setTimeRange} selectedCrimes={selectedCrimes}
+                        setSelectedCrimes={setSelectedCrimes} selectedStates={selectedStates}
+                        setSelectedStates={setSelectedStates}
+                        dateRange={props.dateRange} setDateRange={props.setDateRange}
+                        setIsSaveModalOpen={setIsSaveModalOpen}
+                        heatMap={heatMap} setHeatMap={setHeatMap}
+                        setIsLoadModalOpen={setIsLoadModalOpen} isSaveModalOpen={isSaveModalOpen}
+                        isLoadModalOpen={isLoadModalOpen}
+        />
 
         <RightSidebar
             editRef={editRef} count={count} dateRange={props.dateRange} timeRange={timeRange}
-            setDateRange={props.setDateRange} setTimeRange={setTimeRange} selected={selected} setSelected={setSelected}
+            setDateRange={props.setDateRange} setTimeRange={setTimeRange} selected={selectedCrimes}
+            setSelected={setSelectedCrimes}
             setSelectedStates={setSelectedStates} setHeatMap={setHeatMap} stateCount={stateCount}
+            setIsSaveModalOpen={setIsSaveModalOpen} setIsLoadModalOpen={setIsLoadModalOpen}
+            selectedStates={selectedStates} selectedCrimes={selectedCrimes}
         />
     </div>);
 }

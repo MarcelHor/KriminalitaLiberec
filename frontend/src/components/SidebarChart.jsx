@@ -1,7 +1,7 @@
 import {Pie} from "react-chartjs-2";
 import {CATEGORY_COLORS, CATEGORY_NAMES} from "../js/colors.js";
 
-export const SidebarChart = (props) => {
+const SidebarChart = (props) => {
 
     const labels = Object.keys(props.count);
     const data = Object.values(props.count);
@@ -32,3 +32,5 @@ export const SidebarChart = (props) => {
         </div>
     </>);
 }
+
+export default SidebarChart;
