@@ -5,8 +5,15 @@ import PopupModal from "./PopupModal.jsx";
 
 export const SaveLoadModals = (props) => {
 
-
+    const [notification, setNotification] = useState({status: '', message: ''}); // add this line
     const [fetchedFilters, setFetchedFilters] = useState([]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setNotification({status: '', message: ''});
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, [notification]);
 
     const getFilters = () => {
         axios.get('http://localhost:3000/api/filters').then((response) => {
@@ -35,16 +42,15 @@ export const SaveLoadModals = (props) => {
             heatMap: props.heatMap
         }
 
-        try {
-            const response = await axios.post('http://localhost:3000/api/filters', filter);
+        axios.post('http://localhost:3000/api/filters', filter).then((response) => {
             if (response.status === 200) {
-                await getFilters();
-                // TODO: Show success message to the user
+                getFilters();
+                setNotification({status: 'success', message: 'Filter saved successfully!'});
             }
-        } catch (error) {
+        }).catch((error) => {
             console.log(error);
-            // TODO: Show error message to the user
-        }
+            setNotification({status: 'error', message: 'Error saving filter!'});
+        });
     }
 
 
@@ -56,15 +62,18 @@ export const SaveLoadModals = (props) => {
         const secondDate = new Date(JSON.parse(filter.dateRange)[1]);
         props.setDateRange([firstDate, secondDate]);
         props.setHeatMap(filter.heatMap);
+        setNotification({status: 'success', message: 'Filter loaded successfully!'});
     }
 
     const deleteFilter = async (id) => {
         axios.delete(`http://localhost:3000/api/filters/${id}`).then((response) => {
             if (response.status === 200) {
                 getFilters();
+                setNotification({status: 'success', message: 'Filter deleted successfully!'});
             }
         }).catch((error) => {
             console.log(error);
+            setNotification({status: 'error', message: 'Error deleting filter!'});
         });
     }
 
@@ -153,5 +162,11 @@ export const SaveLoadModals = (props) => {
                 </div>
             </div>
         </PopupModal>
+
+        <div className={`fixed left-5 bottom-5 p-4 rounded-md text-white ${notification.status === 'success' ? 'bg-green-500' : 'bg-red-500'} ${notification.message ? 'flex' : 'hidden'} transition duration-200 ease-in-out`}>
+            <span>{notification.message}</span>
+        </div>
+
+
     </>);
 }
