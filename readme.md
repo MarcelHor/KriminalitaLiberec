@@ -1,13 +1,23 @@
-# Mapa kriminality Liberec
+# Mapa kriminality Liberec - bakalářský projekt
 
-### Webová aplikace, která zobrazuje mapu kriminality v Liberci. Nabízí mnoho filtrů, které umožňují zobrazit data na mapě podle různých kritérií.
+## Abstrakt
+Tato práce se zaměřuje na prozkoumání stávajícího řešení aplikace pro vizualizaci a analýzu kriminality policie České republiky s cílem navrhnout a vyvinout vlastní řešení pro městkou policii v Liberci. Cílem projektu je vytvořit webovou aplikaci, která umožní policistům, případně i veřejnosti, získávat přehledné informace o kriminalitě ve městě, a tím přispět k prevenci trestné činnosti.
 
-## Data
+## Funktionalita
+- Zobrazení kriminality na mapě
+- Zobrazení statistik kriminality
+- Zobrazení detailu kriminality
+- Clustrering bodů na mapě
+- Kreslení na mapě
+- Filtrovaní kriminality podle různých kritérií
+- Ukládání a načítání filtrů
 
-### Data jsou získána z veřejného zdroje [Mapa kriminality.](https://kriminalita.policie.cz/)
+## Použité technologie
+- React
+- Leaflet
+- Express
+- Node.js
+- MySQL
 
-## Technologie
-
-### Aplikace je napsána v jazyce JavaScript. Pro zobrazení mapy je použit [Leaflet](https://leafletjs.com/). Backend běží na [Node.js](https://nodejs.org/en/), s databází [MySQL](https://www.mysql.com/) a frontend je napsán v [React.js](https://reactjs.org/).
-
-
+## Nasazení aplikace
+Není aktuálně dostupné.

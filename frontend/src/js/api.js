@@ -1,5 +1,6 @@
 import axios from "axios";
 
+//TODO: udělat z toho hook?
 export function fetchData(dateRange, setLocations, setLoading, setError) {
     setError(false);
     setLoading(false);
