@@ -6,7 +6,7 @@ import {useEffect, useRef, useState} from "react";
 import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
 import {findParent} from "../js/colors.js";
-import SaveLoadModals from "./SaveLoadModals.jsx";
+import SaveLoadModals from "./FilterModal.jsx";
 
 export default function MapMain(props) {
     const mapRef = useRef();

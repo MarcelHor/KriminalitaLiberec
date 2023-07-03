@@ -3,7 +3,7 @@ import {OpenStreetMapProvider, SearchControl} from "leaflet-geosearch";
 import {useEffect} from "react";
 import "leaflet-geosearch/dist/geosearch.css";
 
-function SearchBar(){
+const SearchBar = () => {
     const map = useMap();
     const provider = new OpenStreetMapProvider(
         {

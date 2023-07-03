@@ -3,7 +3,7 @@ import axios from "axios";
 import PopupModal from "./PopupModal.jsx";
 
 
-const SaveLoadModals = (props) => {
+const FilterModal = (props) => {
 
     const [notification, setNotification] = useState({status: '', message: ''}); // add this line
     const [fetchedFilters, setFetchedFilters] = useState([]);
