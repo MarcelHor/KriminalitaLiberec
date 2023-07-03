@@ -5,7 +5,7 @@ import axios from "axios";
 import rightArrow from "../assets/right_arrow.svg";
 import {CATEGORY_COLORS} from "../js/colors.js";
 
-export const CrimesTree = (props) => {
+const CrimesTree = (props) => {
     const [checked, setChecked] = useState([]);
     const [expanded, setExpanded] = useState([]);
     const [types, setTypes] = useState([]);
@@ -148,3 +148,5 @@ export const CrimesTree = (props) => {
     </>);
 
 };
+
+export default CrimesTree;

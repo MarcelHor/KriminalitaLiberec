@@ -6,7 +6,7 @@ import {useEffect, useRef, useState} from "react";
 import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
 import {findParent} from "../js/colors.js";
-import {SaveLoadModals} from "./SaveLoadModals.jsx";
+import SaveLoadModals from "./SaveLoadModals.jsx";
 
 export default function MapMain(props) {
     const mapRef = useRef();
@@ -109,7 +109,8 @@ export default function MapMain(props) {
                         dateRange={props.dateRange} setDateRange={props.setDateRange}
                         setIsSaveModalOpen={setIsSaveModalOpen}
                         heatMap={heatMap} setHeatMap={setHeatMap}
-                        setIsLoadModalOpen={setIsLoadModalOpen} isSaveModalOpen={isSaveModalOpen} isLoadModalOpen={isLoadModalOpen}
+                        setIsLoadModalOpen={setIsLoadModalOpen} isSaveModalOpen={isSaveModalOpen}
+                        isLoadModalOpen={isLoadModalOpen}
         />
 
         <RightSidebar

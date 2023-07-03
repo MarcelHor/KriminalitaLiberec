@@ -2,7 +2,7 @@ import select_arrow from "../assets/select_arrow.svg";
 import select_line from "../assets/select_line.svg";
 import select_multiple from "../assets/select_multiple.svg";
 
-export const DrawControl = (props) => {
+const DrawControl = (props) => {
     // Get reference to EditControl component
     const editRef = props.editRef;
 
@@ -33,3 +33,5 @@ export const DrawControl = (props) => {
         </div>
     </>)
 }
+
+export default DrawControl;

@@ -3,7 +3,7 @@ import axios from "axios";
 import PopupModal from "./PopupModal.jsx";
 
 
-export const SaveLoadModals = (props) => {
+const SaveLoadModals = (props) => {
 
     const [notification, setNotification] = useState({status: '', message: ''}); // add this line
     const [fetchedFilters, setFetchedFilters] = useState([]);
@@ -45,6 +45,8 @@ export const SaveLoadModals = (props) => {
         axios.post('http://localhost:3000/api/filters', filter).then((response) => {
             if (response.status === 200) {
                 getFilters();
+                setName("");
+                setDescription("");
                 setNotification({status: 'success', message: 'Filter saved successfully!'});
             }
         }).catch((error) => {
@@ -170,3 +172,5 @@ export const SaveLoadModals = (props) => {
 
     </>);
 }
+
+export default FilterModal;

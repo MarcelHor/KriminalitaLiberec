@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import CheckboxTree from "react-checkbox-tree";
 
-export const StateFilter = (props) => {
+const StateFilter = (props) => {
     const [states, setStates] = useState([]);
     const [expanded, setExpanded] = useState([]);
     const [checked, setChecked] = useState([]);
@@ -87,3 +87,5 @@ export const StateFilter = (props) => {
         </div>
     </>);
 }
+
+export default StateFilter;

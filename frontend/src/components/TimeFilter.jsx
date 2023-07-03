@@ -3,8 +3,7 @@ import 'react-calendar/dist/Calendar.css';
 import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import DateRangePicker from "@wojtekmaj/react-daterange-picker";
 
-
-export const TimeFilter = (props) => {
+const TimeFilter = (props) => {
     const changeTime = (time) => {
         props.setTimeRange(time);
     }
@@ -94,5 +93,6 @@ export const TimeFilter = (props) => {
             </div>
         </div>
     </>);
-
 }
+
+export default TimeFilter;

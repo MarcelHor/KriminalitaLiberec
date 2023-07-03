@@ -1,11 +1,11 @@
-import {CrimesTree} from "./CrimesTree.jsx";
-import {StateFilter} from "./StateFilter.jsx";
-import {TimeFilter} from "./TimeFilter.jsx";
-import {DrawControl} from "./DrawControl.jsx";
-import {SidebarChart} from "./SidebarChart.jsx";
+import CrimesTree from "./CrimesTree.jsx";
+import StateFilter from "./StateFilter.jsx";
+import TimeFilter from "./TimeFilter.jsx";
+import DrawControl from "./DrawControl.jsx";
+import SidebarChart from "./SidebarChart.jsx";
 import {useState} from "react";
 
-export default function RightSidebar(props) {
+ const RightSidebar = (props) => {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -81,3 +81,5 @@ export default function RightSidebar(props) {
         </div>
     </div>);
 }
+
+export default RightSidebar;
