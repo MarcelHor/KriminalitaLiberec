@@ -12,6 +12,9 @@ exports.getFilters = async (req, res) => {
 
 exports.postFilter = async (req, res) => {
     try {
+        if (!req.body.name || !req.body.description || !req.body.selectedCrimes || !req.body.selectedStates || !req.body.timeRange || !req.body.dateRange || !req.body.heatMap) {
+            res.status(400).json({message: 'Bad request'});
+        }
         await filtersRepository.postFilter(req.body.name, req.body.description, req.body.selectedCrimes, req.body.selectedStates, req.body.timeRange, req.body.dateRange, req.body.heatMap);
         res.status(200).json({message: 'Filter added'});
     } catch (err) {

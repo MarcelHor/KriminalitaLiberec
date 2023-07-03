@@ -6,8 +6,7 @@ import {useEffect, useRef, useState} from "react";
 import 'leaflet/dist/leaflet.css';
 import MapDraw from "./MapDraw.jsx";
 import {findParent} from "../js/colors.js";
-import PopupModal from "./PopupModal.jsx";
-import axios from "axios";
+import {SaveLoadModals} from "./SaveLoadModals.jsx";
 
 export default function MapMain(props) {
     const mapRef = useRef();
@@ -25,6 +24,7 @@ export default function MapMain(props) {
 
     const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
     const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
+
 
     const filterMarkers = (locations, selected, selectedStates, timeRange) => {
         const selectedInt = selected.map((item) => parseInt(item));
@@ -77,59 +77,6 @@ export default function MapMain(props) {
         setStateCount(stateCount);
     }, [visibleMarkers, props.locations, selectedStates]);
 
-    const [fetchedFilters, setFetchedFilters] = useState([]);
-
-    const getFilters = () => {
-        axios.get('http://localhost:3000/api/filters').then((response) => {
-            setFetchedFilters(response.data);
-            console.log(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-
-    useEffect(() => {
-        getFilters();
-    }, []);
-
-
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-
-    const saveFilter = async (name, description) => {
-        const filter = {
-            name: name,
-            description: description,
-            timeRange: JSON.stringify(timeRange),
-            selectedCrimes: JSON.stringify(selectedCrimes),
-            selectedStates: JSON.stringify(selectedStates),
-            dateRange: JSON.stringify(props.dateRange),
-            heatMap: heatMap
-        }
-
-        try {
-            const response = await axios.post('http://localhost:3000/api/filters', filter);
-            if (response.status === 200) {
-                await getFilters();
-                // TODO: Show success message to the user
-            }
-        } catch (error) {
-            console.log(error);
-            // TODO: Show error message to the user
-        }
-    }
-
-
-    const loadFilter = (filter) => {
-        setTimeRange(JSON.parse(filter.timeRange));
-        setSelectedCrimes(JSON.parse(filter.selectedCrimes));
-        setSelectedStates(JSON.parse(filter.selectedStates));
-        const firstDate = new Date(JSON.parse(filter.dateRange)[0]);
-        const secondDate = new Date(JSON.parse(filter.dateRange)[1]);
-        props.setDateRange([firstDate, secondDate]);
-        setHeatMap(filter.heatMap);
-    }
-
 
     return (<div className={"flex"}>
         <MapContainer
@@ -156,77 +103,14 @@ export default function MapMain(props) {
 
         </MapContainer>
 
-        <PopupModal isPopupOpen={isSaveModalOpen} setisPopupOpen={setIsSaveModalOpen}>
-            <div className={"flex flex-col items-center space-y-6"}>
-                <h1 className={"text-3xl font-bold mb-4"}>Save Filter</h1>
-                <div className="w-2/3">
-                    <label htmlFor="filterName" className="block text-sm font-medium text-gray-700">Filter Name</label>
-                    <input type="text"
-                           name="filterName"
-                           id="filterName"
-                           placeholder="Enter the filter name"
-                           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                           onChange={(e) => setName(e.target.value)}
-                           required/>
-                </div>
-                <div className="w-2/3 h-40 my-2">
-                    <label htmlFor="filterDescription" className="block text-sm font-medium text-gray-700">Filter
-                        Description</label>
-                    <textarea name="filterDescription"
-                              id="filterDescription"
-                              placeholder="Enter the filter description"
-                              maxLength="200"
-                              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md resize-none h-full"
-                              onChange={(e) => setDescription(e.target.value)}
-                              required/>
-                </div>
-                <div className={"flex flex-row items-center justify-center w-2/3 space-x-2"}>
-                    <button
-                        className={"bg-red-500 hover:bg-red-700 text-white rounded-md p-2 w-full transition duration-200 ease-in-out"}
-                        onClick={() => setIsSaveModalOpen(false)}>Cancel
-                    </button>
-                    <button
-                        className={"bg-green-500 hover:bg-green-700 text-white rounded-md p-2 w-full transition duration-200 ease-in-out"}
-                        onClick={() => {
-                            if (name.trim() && description.trim()) {
-                                saveFilter(name, description);
-                                setIsSaveModalOpen(false);
-                            } else {
-                                alert("Please fill out both fields.");
-                            }
-                        }}>Save
-                    </button>
-                </div>
-            </div>
-        </PopupModal>
-
-
-        <PopupModal isPopupOpen={isLoadModalOpen} setisPopupOpen={setIsLoadModalOpen}>
-            <h1 className={"text-2xl font-bold text-center"}>Load Filter</h1>
-            <div className={"flex flex-col items-center h-full p-2"}>
-                <div className={"overflow-y-auto w-2/3 space-y-4"}>
-                    {fetchedFilters.map((filter) => {
-                        return (
-                            <div className={"flex flex-row items-start justify-between bg-gray-100 p-4 rounded-md"} key={filter.id}>
-                                <div className={"flex flex-col space-y-2"}>
-                                    <span className={"font-bold text-md"}>{filter.name}</span>
-                                    <span className={"text-gray-700 w-full"}>{filter.description}</span>
-                                    <span className={"text-sm text-gray-500"}>{filter.created_at}</span>
-                                </div>
-                                <button className={"bg-green-500 hover:bg-green-700 text-white rounded-md p-2 transition duration-200 ease-in-out"}
-                                        onClick={() => {
-                                            loadFilter(filter);
-                                            setIsLoadModalOpen(false);
-                                        }}>
-                                    Load
-                                </button>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
-        </PopupModal>
-
+        <SaveLoadModals timeRange={timeRange} setTimeRange={setTimeRange} selectedCrimes={selectedCrimes}
+                        setSelectedCrimes={setSelectedCrimes} selectedStates={selectedStates}
+                        setSelectedStates={setSelectedStates}
+                        dateRange={props.dateRange} setDateRange={props.setDateRange}
+                        setIsSaveModalOpen={setIsSaveModalOpen}
+                        heatMap={heatMap} setHeatMap={setHeatMap}
+                        setIsLoadModalOpen={setIsLoadModalOpen} isSaveModalOpen={isSaveModalOpen} isLoadModalOpen={isLoadModalOpen}
+        />
 
         <RightSidebar
             editRef={editRef} count={count} dateRange={props.dateRange} timeRange={timeRange}
