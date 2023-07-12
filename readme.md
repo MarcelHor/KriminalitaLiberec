@@ -21,3 +21,5 @@ Tato práce se zaměřuje na prozkoumání stávajícího řešení aplikace pro
 
 ## Nasazení aplikace
 Není aktuálně dostupné.
+
+![image](https://github.com/MarcelHor/KriminalitaLiberec/assets/92269810/ad56b9f1-2598-472f-a91d-b952384a17d7)
