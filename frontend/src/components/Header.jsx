@@ -52,7 +52,7 @@ export default function Header() {
         {/*    </ul>*/}
         {/*</nav>*/}
 
-        {/*<PopupModal isPopupOpen={isAboutOpen} setisPopupOpen={setIsAboutOpen}>*/}
+        {/*<PopupMoodal isPopupOpen={isAboutOpen} setisPopupOpen={setIsAboutOpen}>*/}
         {/*    <h1 className="text-2xl font-bold mb-4">O projektu</h1>*/}
         {/*</PopupModal>*/}
 

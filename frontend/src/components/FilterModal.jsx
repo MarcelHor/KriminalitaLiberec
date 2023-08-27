@@ -1,12 +1,19 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
 import PopupModal from "./PopupModal.jsx";
+import axios from "axios";
 
 
 const FilterModal = (props) => {
-
     const [notification, setNotification] = useState({status: '', message: ''}); // add this line
     const [fetchedFilters, setFetchedFilters] = useState([]);
+    const [filteredFilters, setFilteredFilters] = useState([]);
+    const [searchBar, setSearchBar] = useState('');
+
+    useEffect(() => {
+        setFilteredFilters(fetchedFilters.filter((filter) => {
+            return filter.name.toLowerCase().includes(searchBar.toLowerCase()) || filter.description.toLowerCase().includes(searchBar.toLowerCase());
+        }));
+    }, [searchBar, fetchedFilters]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -127,9 +134,14 @@ const FilterModal = (props) => {
 
         <PopupModal isPopupOpen={props.isLoadModalOpen} setisPopupOpen={props.setIsLoadModalOpen}>
             <h1 className={"text-2xl font-bold text-center mt-4"}>Načíst filtr</h1>
-            <div className={"flex flex-col items-center h-full justify-center px-4 pb-8"}>
+            <div className={"flex flex-row justify-center items-center w-full px-4"}>
+                <input type="text" placeholder={"Vyhledat filtr"}
+                       className={"w-full h-10 rounded-md border-2 border-gray-300 px-4 mt-4 "}
+                       onChange={(e) => setSearchBar(e.target.value)}/>
+            </div>
+            <div className={"flex flex-col items-center h-full justify-start px-4 pb-8"}>
                 <div className={"overflow-y-auto overflow-x-hidden w-full mt-4 mb-8 space-y-4"}>
-                    {fetchedFilters.map((filter) => {
+                    {filteredFilters.map((filter) => {
                         return (<div className={"flex flex-row justify-between bg-gray-100 p-4 rounded-md"}
                                      key={filter.id}>
                             <div className={"flex flex-col space-y-2 w-3/5 pr-6"}>
@@ -165,7 +177,8 @@ const FilterModal = (props) => {
             </div>
         </PopupModal>
 
-        <div className={`fixed left-5 bottom-5 p-4 rounded-md text-white ${notification.status === 'success' ? 'bg-green-500' : 'bg-red-500'} ${notification.message ? 'flex' : 'hidden'} transition duration-200 ease-in-out`}>
+        <div
+            className={`fixed left-5 bottom-5 p-4 rounded-md text-white ${notification.status === 'success' ? 'bg-green-500' : 'bg-red-500'} ${notification.message ? 'flex' : 'hidden'} transition duration-200 ease-in-out`}>
             <span>{notification.message}</span>
         </div>
 
